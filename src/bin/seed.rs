@@ -33,16 +33,28 @@ fn main() {
 
         NewSubmission {
             conference_id: rng.gen_range(0, 11),
+            user_id: rng.gen_range(0, 21),
             title: fake!(Lorem.sentence(4, 6)),
             content: fake!(Lorem.paragraph(7,3)),
         }
     }
 
-    for _x in 0..10 {
-        create_conference(&connection, &generate_conference());
-    }
-    for _y in 1..100 {
-        create_submission(&connection, &generate_submission());
+    fn generate_user() -> NewUser {
+        NewUser {
+            first_name: fake!(Name.first_name).to_string(),
+            last_name: fake!(Name.last_name).to_string(),
+            email: fake!(Internet.free_email),
+            password: fake!(Lorem.word).to_string(),
+        }
     }
 
+    for _x in 0..20 {
+        create_user(&connection, &generate_user());
+    }
+    for _y in 0..10 {
+        create_conference(&connection, &generate_conference());
+    }
+    for _z in 1..100 {
+        create_submission(&connection, &generate_submission());
+    }
 }

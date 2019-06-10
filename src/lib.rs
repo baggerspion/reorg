@@ -38,3 +38,11 @@ pub fn create_submission(conn: &PgConnection, new_submission: &NewSubmission) ->
         .get_result(conn)
         .expect("Error saving new submission")
 }
+
+pub fn create_user(conn: &PgConnection, new_user: &NewUser) -> User {
+    use schema::users;
+    diesel::insert_into(users::table)
+        .values(new_user)
+        .get_result(conn)
+        .expect("Error saving new user")  
+}

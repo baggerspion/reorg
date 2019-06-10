@@ -1,8 +1,8 @@
 use chrono::NaiveDateTime;
-use super::schema::conferences;
+use super::schema::{conferences, submissions};
 
 #[derive(Insertable)]
-#[table_name="conferences"]
+#[table_name = "conferences"]
 pub struct NewConference {
     pub title: String,
     pub start_date: NaiveDateTime,
@@ -27,4 +27,21 @@ pub struct Conference {
     pub postcode: String,
     pub country: String,
     pub cfp: String,
+}
+
+#[derive(Insertable)]
+#[table_name = "submissions"]
+pub struct NewSubmission {
+    pub conference_id: i32,
+    pub title: String,
+    pub content: String,
+}
+
+#[derive(Associations, Queryable)]
+#[belongs_to(Conference)]
+pub struct Submission {
+    pub id: i32,
+    pub conference_id: i32,
+    pub title: String,
+    pub content: String,
 }

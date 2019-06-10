@@ -9,7 +9,7 @@ pub mod schema;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
 use dotenv::dotenv;
-use self::models::{Conference, NewConference};
+use self::models::*;
 use std::env;
 
 pub fn establish_connection() -> PgConnection {
@@ -21,10 +21,20 @@ pub fn establish_connection() -> PgConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
+// Insert new objects here
+
 pub fn create_conference(conn: &PgConnection, new_conference: &NewConference) -> Conference {
     use schema::conferences;
     diesel::insert_into(conferences::table)
         .values(new_conference)
         .get_result(conn)
         .expect("Error saving new conference")
+}
+
+pub fn create_submission(conn: &PgConnection, new_submission: &NewSubmission) -> Submission {
+    use schema::submissions;
+    diesel::insert_into(submissions::table)
+        .values(new_submission)
+        .get_result(conn)
+        .expect("Error saving new submission")
 }

@@ -1,3 +1,1 @@
-DROP TABLE conferences;
-DROP TABLE submissions;
-DROP TABLE users;
+DROP TABLE conferences

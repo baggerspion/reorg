@@ -9,20 +9,4 @@ CREATE TABLE conferences (
 	postcode 		VARCHAR NOT NULL,
 	country			VARCHAR NOT NULL,
 	cfp 			VARCHAR NOT NULL
-);
-
-CREATE TABLE submissions (
-	id				SERIAL PRIMARY KEY,
-	conference_id	INT	NOT NULL,
-	user_id			INT NOT NULL,
-	title			VARCHAR NOT NULL,
-	content			VARCHAR NOT NULL
-);
-
-CREATE TABLE users ( 
-  	id 				SERIAL PRIMARY KEY,
-  	first_name 		VARCHAR NOT NULL,
-  	last_name 		VARCHAR NOT NULL,
-  	email 			VARCHAR UNIQUE NOT NULL,
-  	password 		VARCHAR NOT NULL
-);
+)

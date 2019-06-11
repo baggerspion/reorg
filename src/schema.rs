@@ -14,6 +14,14 @@ table! {
 }
 
 table! {
+    reviewers (id) {
+        id -> Int4,
+        conference_id -> Int4,
+        user_id -> Int4,
+    }
+}
+
+table! {
     submissions (id) {
         id -> Int4,
         conference_id -> Int4,
@@ -35,6 +43,7 @@ table! {
 
 allow_tables_to_appear_in_same_query!(
     conferences,
+    reviewers,
     submissions,
     users,
 );

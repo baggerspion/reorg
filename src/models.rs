@@ -1,5 +1,5 @@
 use chrono::NaiveDateTime;
-use super::schema::{conferences, submissions, users};
+use super::schema::*;
 
 #[derive(Insertable)]
 #[table_name = "conferences"]
@@ -64,4 +64,19 @@ pub struct User {
     pub last_name: String,
     pub email: String,
     pub password: String,
+}
+
+#[derive(Insertable)]
+#[table_name = "reviewers"]
+pub struct NewReviewer {
+    pub conference_id: i32,
+    pub user_id: i32,
+}
+
+#[derive(Associations, Queryable)]
+#[belongs_to(Conference, User)]
+pub struct Reviewer {
+    pub id: i32,
+    pub conference_id: i32,
+    pub user_id: i32,
 }

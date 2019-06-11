@@ -46,3 +46,11 @@ pub fn create_user(conn: &PgConnection, new_user: &NewUser) -> User {
         .get_result(conn)
         .expect("Error saving new user")  
 }
+
+pub fn create_reviewer(conn: &PgConnection, new_reviewer: &NewReviewer) -> Reviewer {
+    use schema::reviewers;
+    diesel::insert_into(reviewers::table)
+        .values(new_reviewer)
+        .get_result(conn)
+        .expect("Error saving new reviewer")  
+}

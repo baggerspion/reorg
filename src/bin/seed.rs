@@ -32,8 +32,8 @@ fn main() {
         let mut rng = rand::thread_rng();
 
         NewSubmission {
-            conference_id: rng.gen_range(0, 11),
-            user_id: rng.gen_range(0, 21),
+            conference_id: rng.gen_range(1, 11),
+            user_id: rng.gen_range(1, 21),
             title: fake!(Lorem.sentence(4, 6)),
             content: fake!(Lorem.paragraph(7,3)),
         }
@@ -48,6 +48,15 @@ fn main() {
         }
     }
 
+    pub fn generate_reviewer() -> NewReviewer {
+        let mut rng = rand::thread_rng();
+
+        NewReviewer {
+            conference_id: rng.gen_range(1, 11),
+            user_id: rng.gen_range(1, 21),
+        }
+    }
+
     for _x in 0..20 {
         create_user(&connection, &generate_user());
     }
@@ -56,5 +65,8 @@ fn main() {
     }
     for _z in 1..100 {
         create_submission(&connection, &generate_submission());
+    }
+    for _a in 1..10 {
+        create_reviewer(&connection, &generate_reviewer());
     }
 }

@@ -7,12 +7,14 @@ extern crate reorg;
 
 use chrono::NaiveDate;
 use rand::Rng;
+use rand::rngs::ThreadRng;
 use reorg::*;
 use reorg::models::*;
 
 fn main() {
     // Clean out old test data
     let connection = establish_connection();
+    let mut rng = rand::thread_rng();
     
     fn generate_conference() -> NewConference {
         NewConference {
@@ -28,14 +30,12 @@ fn main() {
         }
     }
 
-    fn generate_submission() -> NewSubmission {
-        let mut rng = rand::thread_rng();
-
+    fn generate_submission(rng: &mut ThreadRng) -> NewSubmission {
         NewSubmission {
             conference_id: rng.gen_range(1, 11),
             user_id: rng.gen_range(1, 21),
             title: fake!(Lorem.sentence(4, 6)),
-            content: fake!(Lorem.paragraph(7,3)),
+            content: fake!(Lorem.paragraph(7, 3)),
         }
     }
 
@@ -48,12 +48,19 @@ fn main() {
         }
     }
 
-    pub fn generate_reviewer() -> NewReviewer {
-        let mut rng = rand::thread_rng();
-
+    pub fn generate_reviewer(rng: &mut ThreadRng) -> NewReviewer {
         NewReviewer {
             conference_id: rng.gen_range(1, 11),
             user_id: rng.gen_range(1, 21),
+        }
+    }
+
+    pub fn generate_review(rng: &mut ThreadRng) -> NewReview {
+        NewReview {
+            reviewer_id: rng.gen_range(1, 11),
+            submission_id: rng.gen_range(1,101),
+            private_comments: fake!(Lorem.paragraph(7, 3)),
+            shared_comments: fake!(Lorem.paragraph(7, 3)),
         }
     }
 
@@ -63,10 +70,13 @@ fn main() {
     for _y in 0..10 {
         create_conference(&connection, &generate_conference());
     }
-    for _z in 1..100 {
-        create_submission(&connection, &generate_submission());
+    for _z in 0..100 {
+        create_submission(&connection, &generate_submission(&mut rng));
     }
-    for _a in 1..10 {
-        create_reviewer(&connection, &generate_reviewer());
+    for _a in 0..10 {
+        create_reviewer(&connection, &generate_reviewer(&mut rng));
+    }
+    for _b in 1..40 {
+        create_review(&connection, &generate_review(&mut rng));
     }
 }

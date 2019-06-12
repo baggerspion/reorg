@@ -54,3 +54,11 @@ pub fn create_reviewer(conn: &PgConnection, new_reviewer: &NewReviewer) -> Revie
         .get_result(conn)
         .expect("Error saving new reviewer")  
 }
+
+pub fn create_review(conn: &PgConnection, new_review: &NewReview) -> Review {
+    use schema::reviews;
+    diesel::insert_into(reviews::table)
+        .values(new_review)
+        .get_result(conn)
+        .expect("Error saving new review")      
+}

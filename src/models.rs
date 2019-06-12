@@ -80,3 +80,22 @@ pub struct Reviewer {
     pub conference_id: i32,
     pub user_id: i32,
 }
+
+#[derive(Insertable)]
+#[table_name = "reviews"]
+pub struct NewReview {
+    pub reviewer_id: i32,
+    pub submission_id: i32,
+    pub private_comments: String,
+    pub shared_comments: String,
+}
+
+#[derive(Associations, Queryable)]
+#[belongs_to(Reviewer, Submission)]
+pub struct Review {
+    pub id: i32,
+    pub reviewer_id: i32,
+    pub submission_id: i32,
+    pub private_comments: String,
+    pub shared_comments: String,
+}

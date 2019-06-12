@@ -1,4 +1,4 @@
-CREATE TABLE conferences (
+CREATE TABLE IF NOT EXISTS conferences (
 	id 				SERIAL PRIMARY KEY,
 	title 			VARCHAR NOT NULL,
 	start_date 		TIMESTAMP NOT NULL,

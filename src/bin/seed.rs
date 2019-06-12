@@ -48,14 +48,14 @@ fn main() {
         }
     }
 
-    pub fn generate_reviewer(rng: &mut ThreadRng) -> NewReviewer {
+    fn generate_reviewer(rng: &mut ThreadRng) -> NewReviewer {
         NewReviewer {
             conference_id: rng.gen_range(1, 11),
             user_id: rng.gen_range(1, 21),
         }
     }
 
-    pub fn generate_review(rng: &mut ThreadRng) -> NewReview {
+    fn generate_review(rng: &mut ThreadRng) -> NewReview {
         NewReview {
             reviewer_id: rng.gen_range(1, 11),
             submission_id: rng.gen_range(1,101),

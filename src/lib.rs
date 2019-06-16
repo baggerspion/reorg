@@ -21,7 +21,7 @@ pub fn establish_connection() -> PgConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-// Insert new objects here
+// Create new objects here
 
 pub fn create_conference(conn: &PgConnection, new_conference: &NewConference) -> Conference {
     use schema::conferences;
@@ -61,4 +61,12 @@ pub fn create_review(conn: &PgConnection, new_review: &NewReview) -> Review {
         .values(new_review)
         .get_result(conn)
         .expect("Error saving new review")      
+}
+
+// Read objects here
+
+pub fn read_reviews(conn: &PgConnection, submission: &Submission) -> Vec<Review> {
+    Review::belonging_to(submission)
+        .load::<Review>(conn)
+        .expect("Error loading reviews")
 }

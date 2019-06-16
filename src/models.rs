@@ -15,7 +15,8 @@ pub struct NewConference {
     pub cfp: String,
 }
 
-#[derive(Queryable)]
+#[derive(Identifiable, Queryable)]
+#[table_name = "conferences"]
 pub struct Conference {
     pub id: i32,
     pub title: String,
@@ -38,8 +39,10 @@ pub struct NewSubmission {
     pub content: String,
 }
 
-#[derive(Associations, Queryable)]
-#[belongs_to(Conference, User)]
+#[derive(Associations, Identifiable, Queryable)]
+#[belongs_to(Conference)]
+#[belongs_to(User)]
+#[table_name = "submissions"]
 pub struct Submission {
     pub id: i32,
     pub conference_id: i32,
@@ -57,7 +60,8 @@ pub struct NewUser {
     pub password: String,
 }
 
-#[derive(Queryable)]
+#[derive(Identifiable, Queryable)]
+#[table_name = "users"]
 pub struct User {
     pub id: i32,
     pub first_name: String,
@@ -73,8 +77,10 @@ pub struct NewReviewer {
     pub user_id: i32,
 }
 
-#[derive(Associations, Queryable)]
-#[belongs_to(Conference, User)]
+#[derive(Associations, Identifiable, Queryable)]
+#[belongs_to(Conference)]
+#[belongs_to(User)]
+#[table_name = "reviewers"]
 pub struct Reviewer {
     pub id: i32,
     pub conference_id: i32,
@@ -90,8 +96,10 @@ pub struct NewReview {
     pub shared_comments: String,
 }
 
-#[derive(Associations, Queryable)]
-#[belongs_to(Reviewer, Submission)]
+#[derive(Associations, Debug, Identifiable, Queryable)]
+#[belongs_to(Reviewer)]
+#[belongs_to(Submission)]
+#[table_name = "reviews"]
 pub struct Review {
     pub id: i32,
     pub reviewer_id: i32,

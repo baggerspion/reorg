@@ -6,6 +6,7 @@ extern crate rand;
 extern crate reorg;
 
 use chrono::NaiveDate;
+use diesel::prelude::*;
 use rand::Rng;
 use rand::rngs::ThreadRng;
 use reorg::*;
@@ -78,5 +79,15 @@ fn main() {
     }
     for _b in 1..40 {
         create_review(&connection, &generate_review(&mut rng));
+    }
+
+    // Read some reviews
+    use reorg::schema::submissions::dsl::*;
+    let first_submission = submissions.limit(1)
+        .load::<Submission>(&connection)
+        .expect("Error loading posts");
+    let reviews = read_reviews(&connection, &first_submission[0]);
+    for review in reviews {
+        println!{"{}", review.shared_comments};
     }
 }

@@ -81,14 +81,14 @@ fn main() {
         create_review(&connection, &generate_review(&mut rng));
     }
 
-    /*
+
     // Read some reviews
     use reorg::schema::submissions::dsl::*;
     let first_submission = submissions.limit(1)
-        .load::<Submission>(&connection)
+        .load::<Submission>(&*connection)
         .expect("Error loading posts");
     let reviews = read_reviews(&connection, &first_submission[0]);
     for review in reviews {
         println!{"{}", review.shared_comments};
-    }*/
+    }
 }

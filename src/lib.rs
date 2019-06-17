@@ -2,6 +2,8 @@ extern crate chrono;
 #[macro_use]
 extern crate diesel;
 extern crate dotenv;
+#[macro_use] 
+extern crate serde_derive;
 
 pub mod models;
 pub mod schema;

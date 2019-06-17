@@ -1,6 +1,29 @@
 use chrono::NaiveDateTime;
 use super::schema::*;
 
+mod date_format {
+    use chrono::NaiveDateTime;
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+
+    pub fn serialize<S>(date: &NaiveDateTime, serializer: S,) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let s = format!("{}", date.format(FORMAT));
+        serializer.serialize_str(&s)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D,) -> Result<NaiveDateTime, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s = String::deserialize(deserializer)?;
+        NaiveDateTime::parse_from_str(&s, FORMAT).map_err(serde::de::Error::custom)
+    }
+}
+
 #[derive(Insertable)]
 #[table_name = "conferences"]
 pub struct NewConference {
@@ -15,12 +38,14 @@ pub struct NewConference {
     pub cfp: String,
 }
 
-#[derive(Identifiable, Queryable)]
+#[derive(Deserialize, Identifiable, Queryable, Serialize)]
 #[table_name = "conferences"]
 pub struct Conference {
     pub id: i32,
     pub title: String,
+    #[serde(with = "date_format")]
     pub start_date: NaiveDateTime,
+    #[serde(with = "date_format")]
     pub end_date: NaiveDateTime,
     pub venue: String,
     pub address: String,

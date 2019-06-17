@@ -4,6 +4,7 @@ extern crate diesel;
 extern crate fake;
 extern crate rand;
 extern crate reorg;
+extern crate serde;
 
 use chrono::NaiveDate;
 use diesel::prelude::*;

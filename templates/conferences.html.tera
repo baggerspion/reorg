@@ -1,0 +1,9 @@
+{% extends "base" %}
+
+{% block content %}
+<h1>Conferences</h1>
+<ul>
+{% for conference in conferences %}
+  <li>{{ conference.title }}</li>
+{% endfor %}
+{% endblock content %}

@@ -4,6 +4,7 @@ extern crate diesel;
 extern crate fake;
 extern crate rand;
 extern crate reorg;
+extern crate serde;
 
 use chrono::NaiveDate;
 use diesel::prelude::*;
@@ -14,7 +15,7 @@ use reorg::models::*;
 
 fn main() {
     // Clean out old test data
-    let connection = establish_connection();
+    let connection = create_db_pool().get().unwrap();
     let mut rng = rand::thread_rng();
     
     fn generate_conference() -> NewConference {
@@ -81,10 +82,11 @@ fn main() {
         create_review(&connection, &generate_review(&mut rng));
     }
 
+
     // Read some reviews
     use reorg::schema::submissions::dsl::*;
     let first_submission = submissions.limit(1)
-        .load::<Submission>(&connection)
+        .load::<Submission>(&*connection)
         .expect("Error loading posts");
     let reviews = read_reviews(&connection, &first_submission[0]);
     for review in reviews {

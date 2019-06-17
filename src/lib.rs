@@ -31,20 +31,20 @@ pub fn create_db_pool() -> Pool {
     r2d2::Pool::builder().build(manager).expect("Failed to create PgConnection pool")
 }
 
-pub struct Connection(pub r2d2::PooledConnection<ConnectionManager<PgConnection>>);
+pub struct DbConnection(pub r2d2::PooledConnection<ConnectionManager<PgConnection>>);
 
-impl<'a, 'r> FromRequest<'a, 'r> for Connection {
+impl<'a, 'r> FromRequest<'a, 'r> for DbConnection {
     type Error = ();
 
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<Connection, ()> {
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<DbConnection, ()> {
         let pool = request.guard::<State<Pool>>()?;
         match pool.get() {
-            Ok(conn) => Outcome::Success(Connection(conn)),
+            Ok(conn) => Outcome::Success(DbConnection(conn)),
             Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))
         }
     }
 }
-impl Deref for Connection {
+impl Deref for DbConnection {
     type Target = PgConnection;
 
     fn deref(&self) -> &Self::Target {

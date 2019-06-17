@@ -1,0 +1,9 @@
+{% extends "base" %}
+
+{% block content %}
+<h2>Submissions</h2>
+<ul>
+{% for submission in submissions %}
+  <li>{{ submission.title }}</li>
+{% endfor %}
+{% endblock content %}

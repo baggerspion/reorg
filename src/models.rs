@@ -64,7 +64,7 @@ pub struct NewSubmission {
     pub content: String,
 }
 
-#[derive(Associations, Identifiable, Queryable)]
+#[derive(Associations, Deserialize, Identifiable, Queryable, Serialize)]
 #[belongs_to(Conference)]
 #[belongs_to(User)]
 #[table_name = "submissions"]

@@ -74,27 +74,28 @@ fn main() {
         }
     }
 
-    fn generate_review(conf: i32) -> NewReview {
+    fn generate_review(rev: i32, sub: i32) -> NewReview {
         NewReview {
-            reviewer_id: conf,
-            submission_id: conf,
+            reviewer_id: rev,
+            submission_id: sub,
             private_comments: fake!(Lorem.paragraph(7, 3)),
             shared_comments: fake!(Lorem.paragraph(7, 3)),
         }
     }
 
     // Seed new data
+    let mut sub_id: i32 = 0;
     for _w in 0..10 {
         create_user(&connection, &generate_user());
     }
     for x in 1..11 {
         create_conference(&connection, &generate_conference());
-        for _y in 0..5 {
+        for _y in 1..6 {
+            sub_id += 1;
             create_submission(&connection, &generate_submission(x));
-        }
-        for z in 1..11 {
-            create_review(&*connection, &generate_review(x));
-            create_reviewer(&*connection, &generate_reviewer(x, z));
+            for _z in 1..11 {
+                create_review(&*connection, &generate_review(x, sub_id));
+            }
         }
     }
 }

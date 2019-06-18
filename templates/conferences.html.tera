@@ -1,7 +1,7 @@
 {% extends "base" %}
 
 {% block content %}
-<h1>Conferences</h1>
+<h2>Conferences</h2>
 <ul>
 {% for conference in conferences %}
   <li><a href="/submissions/{{ conference.id }}">{{ conference.title }}</a>, {{ conference.city }}</li>

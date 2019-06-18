@@ -121,7 +121,7 @@ pub struct NewReview {
     pub shared_comments: String,
 }
 
-#[derive(Associations, Debug, Identifiable, Queryable)]
+#[derive(Associations, Debug, Deserialize, Identifiable, Queryable, Serialize)]
 #[belongs_to(Reviewer)]
 #[belongs_to(Submission)]
 #[table_name = "reviews"]

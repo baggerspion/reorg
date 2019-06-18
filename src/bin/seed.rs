@@ -9,14 +9,24 @@ extern crate serde;
 use chrono::NaiveDate;
 use diesel::prelude::*;
 use rand::Rng;
-use rand::rngs::ThreadRng;
 use reorg::*;
 use reorg::models::*;
 
 fn main() {
-    // Clean out old test data
+    use reorg::schema::conferences::dsl::*;
+    use reorg::schema::reviews::dsl::*;
+    use reorg::schema::reviewers::dsl::*;
+    use reorg::schema::submissions::dsl::*;
+    use reorg::schema::users::dsl::*;
+
     let connection = create_db_pool().get().unwrap();
-    let mut rng = rand::thread_rng();
+
+    // Clean out old data
+    diesel::delete(conferences).execute(&*connection).expect("Error deleteing conferences");
+    diesel::delete(reviews).execute(&*connection).expect("Error deleteing reviews");
+    diesel::delete(reviewers).execute(&*connection).expect("Error deleteing reviewers");
+    diesel::delete(submissions).execute(&*connection).expect("Error deleteing submissions");
+    diesel::delete(users).execute(&*connection).expect("Error deleteing users");
     
     fn generate_conference() -> NewConference {
         NewConference {
@@ -32,10 +42,12 @@ fn main() {
         }
     }
 
-    fn generate_submission(rng: &mut ThreadRng) -> NewSubmission {
+    fn generate_submission(conf: i32) -> NewSubmission {
+        let mut rng = rand::thread_rng();
+
         NewSubmission {
-            conference_id: rng.gen_range(1, 11),
-            user_id: rng.gen_range(1, 21),
+            conference_id: conf,
+            user_id: rng.gen_range(1, 11),
             title: fake!(Lorem.sentence(4, 6)),
             content: fake!(Lorem.paragraph(7, 3)),
         }
@@ -50,46 +62,34 @@ fn main() {
         }
     }
 
-    fn generate_reviewer(rng: &mut ThreadRng) -> NewReviewer {
+    fn generate_reviewer(conf: i32, rev: i32) -> NewReviewer {
         NewReviewer {
-            conference_id: rng.gen_range(1, 11),
-            user_id: rng.gen_range(1, 21),
+            conference_id: conf,
+            user_id: rev,
         }
     }
 
-    fn generate_review(rng: &mut ThreadRng) -> NewReview {
+    fn generate_review(conf: i32) -> NewReview {
         NewReview {
-            reviewer_id: rng.gen_range(1, 11),
-            submission_id: rng.gen_range(1,101),
+            reviewer_id: conf,
+            submission_id: conf,
             private_comments: fake!(Lorem.paragraph(7, 3)),
             shared_comments: fake!(Lorem.paragraph(7, 3)),
         }
     }
 
-    for _x in 0..20 {
+    // Seed new data
+    for _w in 0..10 {
         create_user(&connection, &generate_user());
     }
-    for _y in 0..10 {
+    for x in 0..10 {
         create_conference(&connection, &generate_conference());
-    }
-    for _z in 0..100 {
-        create_submission(&connection, &generate_submission(&mut rng));
-    }
-    for _a in 0..10 {
-        create_reviewer(&connection, &generate_reviewer(&mut rng));
-    }
-    for _b in 1..40 {
-        create_review(&connection, &generate_review(&mut rng));
-    }
-
-
-    // Read some reviews
-    use reorg::schema::submissions::dsl::*;
-    let first_submission = submissions.limit(1)
-        .load::<Submission>(&*connection)
-        .expect("Error loading posts");
-    let reviews = read_reviews(&connection, &first_submission[0]);
-    for review in reviews {
-        println!{"{}", review.shared_comments};
+        for _y in 0..5 {
+            create_submission(&connection, &generate_submission(x));
+        }
+        for z in 0..10 {
+            create_review(&*connection, &generate_review(x));
+            create_reviewer(&*connection, &generate_reviewer(x, z));
+        }
     }
 }

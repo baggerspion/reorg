@@ -15,7 +15,9 @@ use tera::Context;
 fn main() {    
     rocket::ignite()
         .manage(create_db_pool())
-        .mount("/", routes![get_conferences, get_submissions])
+        .mount("/", routes![get_conferences, 
+                            get_submission, 
+                            get_submissions])
         .attach(Template::fairing())
         .launch();
 }
@@ -42,4 +44,22 @@ fn get_submissions(sid: i32, conn: DbConnection) -> Template {
 
     context.insert("submissions", &subs);
     Template::render("submissions", &context)
+}
+
+#[get("/submission/<sid>")]
+fn get_submission(sid: i32, conn: DbConnection) -> Template {
+    use reorg::schema::reviews::dsl::*;
+    use reorg::schema::submissions::dsl::{submissions, id};
+
+    let mut context = Context::new();
+    let revs = reviews.filter(submission_id.eq(sid))
+        .load::<Review>(&*conn)
+        .expect("Failed to load reviews");
+    let text = submissions.filter(id.eq(sid))
+        .load::<Submission>(&*conn)
+        .expect("Failed to load submission");
+
+    context.insert("reviews", &revs);
+    context.insert("text", &text[0]);
+    Template::render("submission", &context)
 }

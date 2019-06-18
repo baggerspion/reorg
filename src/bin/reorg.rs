@@ -48,7 +48,7 @@ fn get_submissions(sid: i32, conn: DbConnection) -> Template {
 
 #[get("/submission/<sid>")]
 fn get_submission(sid: i32, conn: DbConnection) -> Template {
-    use reorg::schema::reviews::dsl::*;
+    use reorg::schema::reviews::dsl::{reviews, submission_id};
     use reorg::schema::submissions::dsl::{submissions, id};
 
     let mut context = Context::new();

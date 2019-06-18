@@ -27,6 +27,13 @@ fn main() {
     diesel::delete(reviewers).execute(&*connection).expect("Error deleteing reviewers");
     diesel::delete(submissions).execute(&*connection).expect("Error deleteing submissions");
     diesel::delete(users).execute(&*connection).expect("Error deleteing users");
+
+    // Reset the primary keys
+    connection.execute("ALTER SEQUENCE conferences_id_seq RESTART WITH 1").expect("Error resetting conference id");
+    connection.execute("ALTER SEQUENCE reviews_id_seq RESTART WITH 1").expect("Error resetting reviews id");
+    connection.execute("ALTER SEQUENCE reviewers_id_seq RESTART WITH 1").expect("Error resetting reviewers id");
+    connection.execute("ALTER SEQUENCE submissions_id_seq RESTART WITH 1").expect("Error resetting submissions id");
+    connection.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1").expect("Error resetting users id");
     
     fn generate_conference() -> NewConference {
         NewConference {
@@ -82,12 +89,12 @@ fn main() {
     for _w in 0..10 {
         create_user(&connection, &generate_user());
     }
-    for x in 0..10 {
+    for x in 1..11 {
         create_conference(&connection, &generate_conference());
         for _y in 0..5 {
             create_submission(&connection, &generate_submission(x));
         }
-        for z in 0..10 {
+        for z in 1..11 {
             create_review(&*connection, &generate_review(x));
             create_reviewer(&*connection, &generate_reviewer(x, z));
         }

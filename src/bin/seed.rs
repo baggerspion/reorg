@@ -75,11 +75,14 @@ fn main() {
     }
 
     fn generate_review(rev: i32, sub: i32) -> NewReview {
+        let mut rng = rand::thread_rng();
+
         NewReview {
             reviewer_id: rev,
             submission_id: sub,
             private_comments: fake!(Lorem.paragraph(7, 3)),
             shared_comments: fake!(Lorem.paragraph(7, 3)),
+            score: rng.gen_range(0, 10),
         }
     }
 

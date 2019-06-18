@@ -9,7 +9,7 @@
     <body>
         <div class="w3-bar w3-light-gray">
             <div class="w3-button">
-                <b>REORG</b>
+                <b><a href="/">REORG</a></b>
             </div>
         </div>
 

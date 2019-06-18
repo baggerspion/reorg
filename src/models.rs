@@ -64,7 +64,7 @@ pub struct NewSubmission {
     pub content: String,
 }
 
-#[derive(Associations, Identifiable, Queryable)]
+#[derive(Associations, Deserialize, Identifiable, Queryable, Serialize)]
 #[belongs_to(Conference)]
 #[belongs_to(User)]
 #[table_name = "submissions"]
@@ -121,7 +121,7 @@ pub struct NewReview {
     pub shared_comments: String,
 }
 
-#[derive(Associations, Debug, Identifiable, Queryable)]
+#[derive(Associations, Debug, Deserialize, Identifiable, Queryable, Serialize)]
 #[belongs_to(Reviewer)]
 #[belongs_to(Submission)]
 #[table_name = "reviews"]

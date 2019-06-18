@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block content %}
+<h2>{{ text.title }}</h2>
+<p>
+{{ text.content }}
+</p>
+
+<h3>Reviews</h3>
+<ul>
+{% for review in reviews %}
+  <li><p>{{ review.shared_comments }}</p></li>
+{% endfor %}
+{% endblock content %}

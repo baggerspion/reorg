@@ -119,6 +119,7 @@ pub struct NewReview {
     pub submission_id: i32,
     pub private_comments: String,
     pub shared_comments: String,
+    pub score: i32
 }
 
 #[derive(Associations, Debug, Deserialize, Identifiable, Queryable, Serialize)]
@@ -131,4 +132,5 @@ pub struct Review {
     pub submission_id: i32,
     pub private_comments: String,
     pub shared_comments: String,
+    pub score: i32
 }

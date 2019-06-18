@@ -85,16 +85,25 @@ fn main() {
 
     // Seed new data
     let mut sub_id: i32 = 0;
-    for _w in 0..10 {
+    for _user in 0..10 {
         create_user(&connection, &generate_user());
     }
-    for x in 1..11 {
+    for conf_id in 1..11 {
+        // Create the conferences
         create_conference(&connection, &generate_conference());
-        for _y in 1..6 {
+
+        // Create the reviewers
+        // All conferences get all users as reviewers
+        for rev_id in 1..11 {
+            create_reviewer(&*connection, &generate_reviewer(conf_id, rev_id));
+        }
+
+        // Create the submissions and reviews
+        for _x in 1..6 {
             sub_id += 1;
-            create_submission(&connection, &generate_submission(x));
-            for _z in 1..11 {
-                create_review(&*connection, &generate_review(x, sub_id));
+            create_submission(&connection, &generate_submission(conf_id));
+            for rev_id in 1..11 {
+                create_review(&*connection, &generate_review(rev_id, sub_id));
             }
         }
     }

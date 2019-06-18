@@ -10,14 +10,13 @@ use diesel::prelude::*;
 use rand::Rng;
 use reorg::*;
 use reorg::models::*;
+use reorg::schema::conferences::dsl::*;
+use reorg::schema::reviews::dsl::*;
+use reorg::schema::reviewers::dsl::*;
+use reorg::schema::submissions::dsl::*;
+use reorg::schema::users::dsl::*;
 
 fn main() {
-    use reorg::schema::conferences::dsl::*;
-    use reorg::schema::reviews::dsl::*;
-    use reorg::schema::reviewers::dsl::*;
-    use reorg::schema::submissions::dsl::*;
-    use reorg::schema::users::dsl::*;
-
     let connection = create_db_pool().get().unwrap();
 
     // Clean out old data

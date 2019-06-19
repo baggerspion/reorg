@@ -3,7 +3,8 @@
 {% block content %}
 <h2>Submissions</h2>
 <ul>
-{% for submission in submissions %}
-  <li><a href="/submission/{{ submission.id }}">{{ submission.title }}</a></li>
-{% endfor %}
+  {% for submission in submissions %}
+  <li><a href="/submission/{{ submission.id }}">{{ submission.title }}</a> by {{ submission.first_name }} {{submission.last_name }}</li>
+  {% endfor %}
+</ul>
 {% endblock content %}

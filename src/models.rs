@@ -134,3 +134,11 @@ pub struct Review {
     pub shared_comments: String,
     pub score: i32
 }
+
+#[derive(Debug, Deserialize, Queryable, Serialize)]
+pub struct ConfSubmission {
+    pub id: i32,
+    pub title: String,
+    pub first_name: String,
+    pub last_name: String
+}

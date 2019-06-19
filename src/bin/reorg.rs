@@ -1,11 +1,13 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+
 extern crate reorg;
 #[macro_use] 
 extern crate rocket;
 extern crate rocket_contrib;
 extern crate tera;
 
+use diesel::sql_query;
 use diesel::prelude::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use reorg::*;
 use reorg::models::*;
@@ -33,13 +35,18 @@ fn get_conferences(conn: DbConnection) -> Template {
     Template::render("conferences", &context)
 }
 
-#[get("/conference/<sid>")]
-fn get_submissions(sid: i32, conn: DbConnection) -> Template {
-    use reorg::schema::reviews::dsl::reviews;
-    use reorg::schema::submissions::dsl::{conference_id, id, submissions, title};
-    use reorg::schema::users::dsl::{first_name, last_name, users};
-
+#[get("/conference/<cid>")]
+fn get_submissions(cid: i32, conn: DbConnection) -> Template {
     let mut context = Context::new();
+    let query = format!("SELECT S.id, S.title, U.first_name, U.last_name, round(avg(R.score),2) as score \
+                 FROM Submissions S \
+                 JOIN Reviews R ON S.id = R.submission_id \
+                 JOIN Users U ON U.id = S.user_id \
+                 WHERE S.conference_id = {} \
+                 GROUP BY S.id, S.title, U.first_name, U.last_name", cid);
+    let result = sql_query(&query).load::<ConfSubmission>(&*conn).expect("Failed to load submission data");
+    
+    /*
     let subs = submissions
         .inner_join(reviews)
         .inner_join(users)
@@ -47,8 +54,9 @@ fn get_submissions(sid: i32, conn: DbConnection) -> Template {
         .select((id, title, first_name, last_name))
         .load::<ConfSubmission>(&*conn)
         .expect("Failed to load submissions");
+    */
 
-    context.insert("submissions", &subs);
+    context.insert("submissions", &result);
     Template::render("submissions", &context)
 }
 

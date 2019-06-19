@@ -33,13 +33,17 @@ fn get_conferences(conn: DbConnection) -> Template {
     Template::render("conferences", &context)
 }
 
-#[get("/submissions/<sid>")]
+#[get("/conference/<sid>")]
 fn get_submissions(sid: i32, conn: DbConnection) -> Template {
-    use reorg::schema::submissions::dsl::*;
+    use reorg::schema::submissions::dsl::{conference_id, id, submissions, title};
+    use reorg::schema::users::dsl::{first_name, last_name, users};
 
     let mut context = Context::new();
-    let subs = submissions.filter(conference_id.eq(sid))
-        .load::<Submission>(&*conn)
+    let subs = submissions
+        .inner_join(users)
+        .filter(conference_id.eq(sid))
+        .select((id, title, first_name, last_name))
+        .load::<ConfSubmission>(&*conn)
         .expect("Failed to load submissions");
 
     context.insert("submissions", &subs);

@@ -6,7 +6,7 @@ extern crate rocket;
 extern crate rocket_contrib;
 extern crate tera;
 
-use diesel::prelude::*;
+use diesel::prelude::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use reorg::*;
 use reorg::models::*;
 use rocket_contrib::templates::Template;
@@ -35,11 +35,13 @@ fn get_conferences(conn: DbConnection) -> Template {
 
 #[get("/conference/<sid>")]
 fn get_submissions(sid: i32, conn: DbConnection) -> Template {
+    use reorg::schema::reviews::dsl::reviews;
     use reorg::schema::submissions::dsl::{conference_id, id, submissions, title};
     use reorg::schema::users::dsl::{first_name, last_name, users};
 
     let mut context = Context::new();
     let subs = submissions
+        .inner_join(reviews)
         .inner_join(users)
         .filter(conference_id.eq(sid))
         .select((id, title, first_name, last_name))

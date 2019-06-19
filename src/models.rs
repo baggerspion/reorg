@@ -140,5 +140,5 @@ pub struct ConfSubmission {
     pub id: i32,
     pub title: String,
     pub first_name: String,
-    pub last_name: String
+    pub last_name: String,
 }

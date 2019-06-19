@@ -61,3 +61,4 @@ allow_tables_to_appear_in_same_query!(
 );
 
 joinable!(submissions -> users (user_id));
+joinable!(reviews -> submissions (submission_id));

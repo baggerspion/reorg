@@ -1,4 +1,6 @@
+use bigdecimal::BigDecimal;
 use chrono::NaiveDateTime;
+use diesel::sql_types::{Int4, Numeric, Varchar};
 use super::schema::*;
 
 mod date_format {
@@ -135,10 +137,11 @@ pub struct Review {
     pub score: i32
 }
 
-#[derive(Debug, Deserialize, Queryable, Serialize)]
+#[derive(Debug, Deserialize, Queryable, QueryableByName, Serialize)]
 pub struct ConfSubmission {
-    pub id: i32,
-    pub title: String,
-    pub first_name: String,
-    pub last_name: String
+    #[sql_type = "Int4"] pub id: i32,
+    #[sql_type = "Varchar"] pub title: String,
+    #[sql_type = "Varchar"] pub first_name: String,
+    #[sql_type = "Varchar"] pub last_name: String,
+    #[sql_type = "Numeric"] pub score: BigDecimal,
 }

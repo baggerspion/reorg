@@ -9,7 +9,7 @@ extern crate serde_json;
 use diesel::prelude::*;
 use diesel::sql_query;
 use reorg::{DbConnection, create_db_pool};
-use reorg::models::*;
+use reorg::models::{ConfSubmission, Conference};
 use rocket_contrib::json::JsonValue;
 
 fn main() {    

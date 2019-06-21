@@ -15,6 +15,7 @@ fn main() {
     rocket::ignite()
         .manage(create_db_pool())
         .mount("/", routes![get_conference,
+                            get_conference_titles,
                             get_submission_conference,
                             get_submission_details])
         .launch();

@@ -19,7 +19,8 @@ cargo install diesel_cli --no-default-features --features "postgres"
 ### Preparations
 Ensure you have a Postgres database running and accessible, with a known user:
 ```sh
-diesel setup --database-url='postgres://<username>:<password>@<server>/<db_name>
+echo "DATABASE_URL=postgres://<username>:<password>@<server>/<db_name>" > .env
+diesel setup
 diesel migration run
 ```
 

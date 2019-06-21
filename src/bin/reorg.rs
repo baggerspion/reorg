@@ -8,7 +8,7 @@ extern crate serde_json;
 use diesel::prelude::*;
 use diesel::sql_query;
 use reorg::{DbConnection, create_db_pool};
-use reorg::models::{ConfSubmission, Conference, Submission};
+use reorg::models::{ConfSubmission, Conference, Review, Submission};
 use rocket_contrib::json::JsonValue;
 
 fn main() {    
@@ -16,6 +16,7 @@ fn main() {
         .manage(create_db_pool())
         .mount("/", routes![get_conference,
                             get_conference_titles,
+                            get_reviews_submission,
                             get_submission_conference,
                             get_submission_details])
         .launch();
@@ -75,4 +76,16 @@ fn get_submission_details(sub_id: Option<i32>, conn: DbConnection) -> JsonValue 
 fn get_submission_conference(conf_id: i32, conn: DbConnection) -> JsonValue {
     use reorg::schema::submissions::dsl::{conference_id, submissions};
     json!(submissions.filter(conference_id.eq(conf_id)).load::<Submission>(&*conn).expect("Error loading submissions"))
+}
+
+#[get("/reviews/<sub_id>")]
+fn get_reviews_submission(sub_id: i32, conn: DbConnection) -> JsonValue {
+    use reorg::schema::reviews::dsl::*;
+    json!(
+        reviews
+            .filter(submission_id.eq(sub_id))
+            .load::<Review>(&*conn)
+            .expect("Error loading reviews")
+    )
+
 }

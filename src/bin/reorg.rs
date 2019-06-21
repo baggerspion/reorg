@@ -20,6 +20,17 @@ fn main() {
         .launch();
 }
 
+#[get("/conference/titles")]
+fn get_conference_titles(conn: DbConnection) -> JsonValue {
+    use reorg::schema::conferences::dsl::*;
+    json!(
+        conferences
+            .select((id, title))
+            .load::<(i32, String)>(&*conn)
+            .expect("Error loading conference titles")
+        )
+}
+
 #[get("/conference?<conf_id>")]
 fn get_conference(conf_id: Option<i32>, conn: DbConnection) -> JsonValue {
     use reorg::schema::conferences::dsl::*;

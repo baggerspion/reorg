@@ -1,6 +1,6 @@
 use bigdecimal::BigDecimal;
 use chrono::NaiveDateTime;
-use diesel::sql_types::{Int4, Numeric, Varchar};
+use diesel::sql_types::{Int4, Int8, Numeric, Varchar};
 use super::schema::*;
 
 mod date_format {
@@ -144,4 +144,6 @@ pub struct ConfSubmission {
     #[sql_type = "Varchar"] pub first_name: String,
     #[sql_type = "Varchar"] pub last_name: String,
     #[sql_type = "Numeric"] pub score: BigDecimal,
+    #[sql_type = "Int8"] pub count: i64,
+    #[sql_type = "Numeric"] pub stddev: BigDecimal,
 }

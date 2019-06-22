@@ -53,7 +53,7 @@ fn get_conference(conf_id: Option<i32>, conn: DbConnection) -> JsonValue {
 fn get_submission_details(sub_id: Option<i32>, conn: DbConnection) -> JsonValue {
     let query = match sub_id {
         Some(x) => {
-            format!("SELECT S.id, S.title, U.first_name, U.last_name, round(avg(R.score),2) as score \
+            format!("SELECT S.id, S.title, U.first_name, U.last_name, round(avg(R.score),2) as score, count(R.score) as count, stddev(R.score) as stddev \
                  FROM Submissions S \
                  JOIN Reviews R ON S.id = R.submission_id \
                  JOIN Users U ON U.id = S.user_id \

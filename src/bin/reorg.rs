@@ -5,6 +5,7 @@ extern crate reorg;
 #[macro_use] extern crate rocket_contrib;
 extern crate serde_json;
 
+use diesel::dsl::count;
 use diesel::prelude::*;
 use diesel::sql_query;
 use reorg::{DbConnection, create_db_pool};
@@ -47,6 +48,18 @@ fn get_conference(conf_id: Option<i32>, conn: DbConnection) -> JsonValue {
                             .expect("Failed to load conferences")
                      ),
     }
+}
+
+#[get("/conference/submissions/count?<conf_id>")]
+fn get_conference_submissions_count(conf_id: i32, conn: DbConnection) -> JsonValue {
+    use reorg::schema::submissions::dsl::*;
+    json!(
+        submissions
+            .select(count(id))
+            .filter(conference_id.eq(conf_id))
+            .load::<(i64)>(&*conn)
+            .expect("Error loading talk count")
+    )
 }
 
 #[get("/submission?<sub_id>")]

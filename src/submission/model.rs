@@ -1,6 +1,8 @@
+use conference::model::Conference;
+use data::DbConnection;
 use diesel::prelude::*;
 use submission::schema::submissions::dsl::*;
-use super::data::DbConnection;
+use user::model::User;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Conference)]

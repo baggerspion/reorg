@@ -1,5 +1,7 @@
 use diesel::prelude::*;
 use review::schema::reviews::dsl::*;
+use reviewer::model::Reviewer;
+use submission::model::Submission;
 use super::data::DbConnection;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]

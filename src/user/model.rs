@@ -1,5 +1,5 @@
+use data::DbConnection;
 use diesel::prelude::*;
-use super::data::DbConnection;
 use user::schema::users::dsl::*;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]

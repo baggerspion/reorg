@@ -1,6 +1,8 @@
+use conference::model::Conference;
+use data::DbConnection;
 use diesel::prelude::*;
 use reviewer::schema::reviewers::dsl::*;
-use super::data::DbConnection;
+use user::model::User;
 
 #[derive(Associations, Identifiable, Insertable, Queryable)]
 #[belongs_to(Conference)]

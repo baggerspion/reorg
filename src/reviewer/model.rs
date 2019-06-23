@@ -1,4 +1,6 @@
 use diesel::prelude::*;
+use reviewer::schema::reviewers::dsl::*;
+use super::data::DbConnection;
 
 #[derive(Associations, Identifiable, Insertable, Queryable)]
 #[belongs_to(Conference)]
@@ -11,12 +13,11 @@ pub struct Reviewer {
 }
 
 impl Reviewer {
-    pub fn create(reviewer: Reviewer, conn: DbConnection) -> QueryResult<Reviewer> {
-        diesel::insert_into(reviewers::table)
-            .values(&reviewer)
-            .execute(&conn)?;
-
-        reviewers::table.order(reviewer::id.desc()).first(&*conn)
+    pub fn create(reviewer: Reviewer, conn: DbConnection) -> Reviewer {
+        diesel::insert_into(reviewers)
+            .values(reviewer)
+            .get_result(conn)
+            .expect("Error saving new reviewer")
     }
 
     pub fn read(id: i32, conn: DbConnection) -> QueryResult<Vec<Reviewer>> {

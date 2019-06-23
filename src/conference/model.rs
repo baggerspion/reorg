@@ -1,5 +1,7 @@
 use chrono::NaiveDateTime;
+use self::conference::schema::conferences::dsl::{conferences, id};
 use diesel::prelude::*;
+use super::data::DbConnection;
 
 #[derive(Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "conferences"]
@@ -42,33 +44,32 @@ mod date_format {
 }
 
 impl Conference {
-    pub fn create(conference: Conference, conn: DbConnection) -> QueryResult<Conference> {
-        diesel::insert_into(conferences::table)
-            .values(&conference)
-            .execute(&conn)?;
-
-        conferences::table.order(conference::id.desc()).first(&*conn)
+    pub fn create(conference: Conference, conn: DbConnection) -> Conference {
+        diesel::insert_into(conferences)
+            .values(conference)
+            .get_result(conn)
+            .expect("Error saving new conference")
     }
 
-    pub fn read(id: i32, conn: DbConnection) -> QueryResult<Vec<Conference>> {
+    pub fn read(cid: i32, conn: DbConnection) -> QueryResult<Vec<Conference>> {
         if id != 0 {
-            conferences::table
-                .filter(conferences::id.eq(id))
+            conferences
+                .filter(id.eq(cid))
                 .load::<Conference>(&*conn)
         } else {
-            conference::table
+            conferences
                 .load::<Conference>(&*conn)
         }
     }
 
-    pub fn update(id: i32, conference: Conference, conn: DbConnection) -> bool {
-        diesel::update(conferences::table.find(id))
+    pub fn update(cid: i32, conference: Conference, conn: DbConnection) -> bool {
+        diesel::update(conferences.find(cid))
             .set(&conference)
             .execute(&*conn).is_ok()
     }
 
-    pub fn delete(id: i32, conference: Conference, conn: DbConnection) -> bool {
-        diesel::delete(conferences::table.find(id))
+    pub fn delete(cid: i32, conference: Conference, conn: DbConnection) -> bool {
+        diesel::delete(conferences.find(cid))
             .set(&conference)
             .execute(&*conn).is_ok()
     }

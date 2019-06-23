@@ -1,4 +1,6 @@
 use diesel::prelude::*;
+use submission::schema::submissions::dsl::*;
+use super::data::DbConnection;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Conference)]
@@ -13,12 +15,11 @@ pub struct Submission {
 }
 
 impl Submission {
-    pub fn create(submission: Submission, conn: DbConnection) -> QueryResult<Submission> {
-        diesel::insert_into(submissions::table)
-            .values(&submission)
-            .execute(&conn)?;
-
-        submissions::table.order(submissions::id.desc()).first(&*conn)
+    pub fn create(submission: Submission, conn: DbConnection) -> Submission {
+        diesel::insert_into(submissions)
+            .values(submission)
+            .get_result(conn)
+            .expect("Error saving new submission")
     }
 
     pub fn read(id: i32, conn: DbConnection) -> QueryResult<Vec<Submission>> {

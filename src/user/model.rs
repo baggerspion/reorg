@@ -1,9 +1,11 @@
 use diesel::prelude::*;
+use super::data::DbConnection;
+use user::schema::users::dsl::*;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
 pub struct User {
-    pub id: i32,
+    pub id: Option<i32>,
     pub first_name: String,
     pub last_name: String,
     pub email: String,
@@ -11,12 +13,11 @@ pub struct User {
 }
 
 impl User {
-    pub fn create(user: User, conn: DbConnection) -> QueryResult<User> {
-        diesel::insert_into(users::table)
-            .values(&user)
-            .execute(&conn)?;
-
-        users::table.order(users::id.desc()).first(&*conn)
+    pub fn create(user: User, conn: DbConnection) -> User {
+        diesel::insert_into(users)
+            .values(user)
+            .get_result(conn)
+            .expect("Error saving new conference")
     }
 
     pub fn read(id: i32, conn: DbConnection) -> QueryResult<Vec<User>> {

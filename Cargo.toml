@@ -4,14 +4,6 @@ version = "0.1.0"
 authors = ["Paul Adams <paul@baggerspion.net>"]
 edition = "2018"
 
-[[bin]]
-name = "seed"
-path = "src/bin/seed.rs"
-
-[[bin]]
-name = "reorg"
-path = "src/bin/reorg.rs"
-
 [dependencies]
 bigdecimal = { version = ">= 0.0.10, < 0.0.15", features = ["serde"] }
 chrono = { version = "0.4.6" }

@@ -97,25 +97,45 @@ fn main() {
 
     // Seed new data
     let mut sub_id: i32 = 0;
+    println!("{}", "- Creating users".to_string());
     for _user in 0..10 {
-        User::create(&generate_user(), &connection);
+        match User::create(&generate_user(), &connection) {
+            Ok(x) => println!("-> Created user: {}", x.id.unwrap()),
+            Err(y) => println!("-> Failed to create user: {}", y),
+        }
     }
+    println!("{}", "- Creating conferences".to_string());
     for conf_id in 1..11 {
         // Create the conferences
-        Conference::create(&generate_conference(), &connection);
+        match Conference::create(&generate_conference(), &connection) {
+            Ok(x) => println!("-> Created conference: {}", x.id.unwrap()),
+            Err(y) => println!("-> Failed to create conference: {}", y),
+        }
 
         // Create the reviewers
         // All conferences get all users as reviewers
+        println!("{}", "- Creating reviewers".to_string());
         for rev_id in 1..11 {
-            Reviewer::create(&generate_reviewer(conf_id, rev_id), &connection);
+            match Reviewer::create(&generate_reviewer(conf_id, rev_id), &connection) {
+                Ok(x) => println!("-> Created review: {}", x.id.unwrap()),
+                Err(y) => println!("-> Failed to create review: {}", y),
+            }
         }
 
         // Create the submissions and reviews
+        println!("{}", "- Creating submissions".to_string());
         for _x in 1..6 {
             sub_id += 1;
-            Submission::create(&generate_submission(conf_id), &connection);
+            match Submission::create(&generate_submission(conf_id), &connection) {
+                Ok(x) => println!("-> Created submission: {}", x.id.unwrap()),
+                Err(y) => println!("-> Failed to create submission: {}", y),
+            }
+            println!("{}", "- Creating reviews".to_string());
             for rev_id in 1..11 {
-                Review::create(&generate_review(rev_id, sub_id), &connection);
+                match Review::create(&generate_review(rev_id, sub_id), &connection) {
+                    Ok(x) => println!("-> Created review: {}", x.id.unwrap()),
+                    Err(y) => println!("-> Failed to create review: {}", y),
+                }
             }
         }
     }

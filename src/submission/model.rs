@@ -5,7 +5,6 @@ use diesel;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
 
-
 #[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Conference)]
 #[belongs_to(User)]

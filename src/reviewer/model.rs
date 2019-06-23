@@ -1,8 +1,8 @@
 use conference::model::Conference;
 use data::DbConnection;
 use diesel::prelude::*;
-use reviewer::schema::reviewers::dsl::*;
-use user::model::User;
+use reviewer::schema::reviewers;
+use self::model::User;
 
 #[derive(Associations, Identifiable, Insertable, Queryable)]
 #[belongs_to(Conference)]
@@ -16,9 +16,9 @@ pub struct Reviewer {
 
 impl Reviewer {
     pub fn create(reviewer: Reviewer, conn: DbConnection) -> Reviewer {
-        diesel::insert_into(reviewers)
+        diesel::insert_into(reviewers::table)
             .values(reviewer)
-            .get_result(conn)
+            .get_result(&*conn)
             .expect("Error saving new reviewer")
     }
 

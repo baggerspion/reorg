@@ -1,6 +1,6 @@
 use data::DbConnection;
 use diesel::prelude::*;
-use user::schema::users::dsl::*;
+use self::schema::users;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
@@ -14,9 +14,9 @@ pub struct User {
 
 impl User {
     pub fn create(user: User, conn: DbConnection) -> User {
-        diesel::insert_into(users)
+        diesel::insert_into(users::table)
             .values(user)
-            .get_result(conn)
+            .get_result(&*conn)
             .expect("Error saving new conference")
     }
 

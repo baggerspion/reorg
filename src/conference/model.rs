@@ -1,5 +1,5 @@
 use chrono::NaiveDateTime;
-use conference::schema::*;
+use conference::schema::conferences;
 use data::DbConnection;
 use diesel::prelude::*;
 
@@ -45,7 +45,7 @@ mod date_format {
 
 impl Conference {
     pub fn create(conference: Conference, conn: DbConnection) -> Conference {
-        diesel::insert_into(conferences)
+        diesel::insert_into(conferences::table)
             .values(conference)
             .get_result(conn)
             .expect("Error saving new conference")
@@ -53,23 +53,23 @@ impl Conference {
 
     pub fn read(cid: i32, conn: DbConnection) -> QueryResult<Vec<Conference>> {
         if id != 0 {
-            conferences
-                .filter(id.eq(cid))
+            conferences::table
+                .filter(conferences::id.eq(cid))
                 .load::<Conference>(&*conn)
         } else {
-            conferences
+            conferences::table
                 .load::<Conference>(&*conn)
         }
     }
 
     pub fn update(cid: i32, conference: Conference, conn: DbConnection) -> bool {
-        diesel::update(conferences.find(cid))
+        diesel::update(conferences::table.find(cid))
             .set(&conference)
             .execute(&*conn).is_ok()
     }
 
     pub fn delete(cid: i32, conference: Conference, conn: DbConnection) -> bool {
-        diesel::delete(conferences.find(cid))
+        diesel::delete(conferences::table.find(cid))
             .set(&conference)
             .execute(&*conn).is_ok()
     }

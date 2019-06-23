@@ -1,10 +1,10 @@
 pub mod model;
 pub mod schema;
 
+use data::DbConnection;
 use rocket::{self, http::Status};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::User;
-use super::data::DbConnection;
 
 #[post("/", format = "application/json", data = "<user>")]
 fn create(user: Json<User>, conn: DbConnection) -> Result<JsonValue, Status> {

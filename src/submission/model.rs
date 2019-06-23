@@ -1,7 +1,7 @@
 use conference::model::Conference;
 use data::DbConnection;
 use diesel::prelude::*;
-use submission::schema::submissions::dsl::*;
+use submission::schema::submissions;
 use user::model::User;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
@@ -18,9 +18,9 @@ pub struct Submission {
 
 impl Submission {
     pub fn create(submission: Submission, conn: DbConnection) -> Submission {
-        diesel::insert_into(submissions)
+        diesel::insert_into(submissions::table)
             .values(submission)
-            .get_result(conn)
+            .get_result(&*conn)
             .expect("Error saving new submission")
     }
 

@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 
-#[derive(Identifiable, Queryable)]
+#[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
 pub struct User {
     pub id: i32,

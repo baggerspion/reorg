@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 
-#[derive(Associations, Debug, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
+#[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Reviewer)]
 #[belongs_to(Submission)]
 #[table_name = "reviews"]

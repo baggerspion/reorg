@@ -1,7 +1,7 @@
 use chrono::NaiveDateTime;
-use self::conference::schema::conferences::dsl::{conferences, id};
+use conference::schema::*;
+use data::DbConnection;
 use diesel::prelude::*;
-use super::data::DbConnection;
 
 #[derive(Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "conferences"]

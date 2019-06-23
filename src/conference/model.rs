@@ -1,7 +1,7 @@
 use chrono::NaiveDateTime;
-use conference::schema::conferences;
-use data::DbConnection;
 use diesel::prelude::*;
+use self::schema::conferences;
+use super::data::DbConnection;
 
 #[derive(Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "conferences"]
@@ -68,7 +68,7 @@ impl Conference {
             .execute(&*conn).is_ok()
     }
 
-    pub fn delete(cid: i32, conference: Conference, conn: DbConnection) -> bool {
+    pub fn delete(cid: i32, conn: DbConnection) -> bool {
         diesel::delete(conferences::table.find(cid))
             .set(&conference)
             .execute(&*conn).is_ok()

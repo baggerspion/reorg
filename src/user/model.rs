@@ -1,6 +1,6 @@
-use data::DbConnection;
 use diesel::prelude::*;
 use self::schema::users;
+use super::data::DbConnection;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
@@ -37,9 +37,7 @@ impl User {
             .execute(&*conn).is_ok()
     }
 
-    pub fn delete(id: i32, user: User, conn: DbConnection) -> bool {
-        diesel::delete(users::table.find(id))
-            .set(&user)
-            .execute(&*conn).is_ok()
+    pub fn delete(id: i32, conn: DbConnection) -> bool {
+        diesel::delete(users::table.find(id)).execute(&*conn).is_ok()
     }
 }

@@ -1,8 +1,8 @@
-use conference::model::Conference;
-use data::DbConnection;
 use diesel::prelude::*;
-use reviewer::schema::reviewers;
 use self::model::User;
+use self::schema::reviewers;
+use super::conference::model::Conference;
+use super::data::DbConnection;
 
 #[derive(Associations, Identifiable, Insertable, Queryable)]
 #[belongs_to(Conference)]
@@ -39,7 +39,7 @@ impl Reviewer {
             .execute(&*conn).is_ok()
     }
 
-    pub fn delete(id: i32, reviewer: Reviewer, conn: DbConnection) -> bool {
+    pub fn delete(id: i32, conn: DbConnection) -> bool {
         diesel::delete(reviewers::table.find(id))
             .set(&reviewer)
             .execute(&*conn).is_ok()

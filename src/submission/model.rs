@@ -1,8 +1,8 @@
-use conference::model::Conference;
-use data::DbConnection;
 use diesel::prelude::*;
-use submission::schema::submissions;
-use user::model::User;
+use self::schema::submissions;
+use super::conference::model::Conference;
+use super::data::DbConnection;
+use super::user::model::User;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Conference)]
@@ -41,9 +41,7 @@ impl Submission {
             .execute(&*conn).is_ok()
     }
 
-    pub fn delete(id: i32, submission: Submission, conn: DbConnection) -> bool {
-        diesel::delete(submissions::table.find(id))
-            .set(&submission)
-            .execute(&*conn).is_ok()
+    pub fn delete(id: i32, conn: DbConnection) -> bool {
+        diesel::delete(submissions::table.find(id)).execute(&*conn).is_ok()
     }
 }

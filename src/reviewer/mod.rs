@@ -1,10 +1,12 @@
+#![feature(proc_macro_hygiene, decl_macro)]
+
 pub mod model;
 pub mod schema;
 
-use data::DbConnection;
 use rocket::{self, http::Status};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::Reviewer;
+use super::data::DbConnection;
 
 #[post("/", format = "application/json", data = "<reviewer>")]
 fn create(reviewer: Json<Reviewer>, conn: DbConnection) -> Result<JsonValue, Status> {
@@ -22,7 +24,7 @@ fn read(id: i32, conn: DbConnection) -> Result<JsonValue, Status> {
 }
 
 #[post("/<id>", format = "application/json", data = "<reviewer>")]
-fn update(id: i32, reviwer: Json<Reviewer>, conn: DbConnection) -> Result<JsonValue, Status> {
+fn update(id: i32, reviewer: Json<Reviewer>, conn: DbConnection) -> Result<JsonValue, Status> {
     let update = Reviewer { id: Some(id), ..reviewer.into_inner() };
     Json(json!({
         "success": Reviewer::update(id, update, &connection)

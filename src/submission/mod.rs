@@ -1,14 +1,16 @@
+#![feature(proc_macro_hygiene, decl_macro)]
+
 pub mod model;
 pub mod schema;
 
-use data::DbConnection;
 use rocket::{self, http::Status};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::Submission;
+use super::data::DbConnection;
 
 #[post("/", format = "application/json", data = "<submission>")]
 fn create(submission: Json<Submission>, conn: DbConnection) -> Result<JsonValue, Status> {
-    let insert = Submission { id: None, ..user.into_inner() };
+    let insert = Submission { id: None, ..submission.into_inner() };
     Submission::create(insert, &conn)
         .map(Json)
         .map_err(|_| Status::InternalServerError)

@@ -1,8 +1,8 @@
-use data::DbConnection;
 use diesel::prelude::*;
-use review::schema::reviews;
-use reviewer::model::Reviewer;
-use submission::model::Submission;
+use self::schema::reviews;
+use super::data::DbConnection;
+use super::reviewer::model::Reviewer;
+use super::submission::model::Submission;
 
 #[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Reviewer)]
@@ -42,7 +42,7 @@ impl Review {
             .execute(&*conn).is_ok()
     }
 
-    pub fn delete(id: i32, review: Review, conn: DbConnection) -> bool {
+    pub fn delete(id: i32, conn: DbConnection) -> bool {
         diesel::delete(reviews::table.find(id))
             .set(&review)
             .execute(&*conn).is_ok()

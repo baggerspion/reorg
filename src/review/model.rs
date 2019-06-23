@@ -1,10 +1,11 @@
+use crate::data::DbConnection;
+use crate::reviewer::model::Reviewer;
+use crate::review::schema::reviews;
+use crate::submission::model::Submission;
+use diesel;
 use diesel::prelude::*;
-use self::schema::reviews;
-use super::data::DbConnection;
-use super::reviewer::model::Reviewer;
-use super::submission::model::Submission;
 
-#[derive(Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
+#[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Reviewer)]
 #[belongs_to(Submission)]
 #[table_name = "reviews"]
@@ -18,33 +19,31 @@ pub struct Review {
 }
 
 impl Review {
-    pub fn create(review: Review, conn: DbConnection) -> Review {
+    pub fn create(review: &Review, conn: &DbConnection) -> QueryResult<Review> {
         diesel::insert_into(reviews::table)
             .values(review)
-            .get_result(conn)
+            .get_result(&**conn)
             .expect("Error saving new conference")
     }
 
-    pub fn read(id: i32, conn: DbConnection) -> QueryResult<Vec<Review>> {
+    pub fn read(id: i32, conn: &DbConnection) -> QueryResult<Vec<Review>> {
         if id != 0 {
             reviews::table
                 .filter(reviews::id.eq(id))
-                .load::<Review>(&*conn)
+                .load::<Review>(&**conn)
         } else {
             reviews::table
-                .load::<Review>(&*conn)
+                .load::<Review>(&**conn)
         }
     }
 
-    pub fn update(id: i32, review: Review, conn: DbConnection) -> bool {
+    pub fn update(id: i32, review: &Review, conn: &DbConnection) -> bool {
         diesel::update(reviews::table.find(id))
-            .set(&review)
-            .execute(&*conn).is_ok()
+            .set(review)
+            .execute(&**conn).is_ok()
     }
 
-    pub fn delete(id: i32, conn: DbConnection) -> bool {
-        diesel::delete(reviews::table.find(id))
-            .set(&review)
-            .execute(&*conn).is_ok()
+    pub fn delete(id: i32, conn: &DbConnection) -> bool {
+        diesel::delete(reviews::table.find(id)).execute(&**conn).is_ok()
     }
 }

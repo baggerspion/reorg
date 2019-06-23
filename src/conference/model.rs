@@ -1,9 +1,10 @@
 use chrono::NaiveDateTime;
+use crate::conference::schema::conferences;
+use crate::data::DbConnection;
+use diesel;
 use diesel::prelude::*;
-use self::schema::conferences;
-use super::data::DbConnection;
 
-#[derive(Deserialize, Identifiable, Insertable, Queryable, Serialize)]
+#[derive(AsChangeset, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "conferences"]
 pub struct Conference {
     pub id: Option<i32>,
@@ -44,33 +45,31 @@ mod date_format {
 }
 
 impl Conference {
-    pub fn create(conference: Conference, conn: DbConnection) -> Conference {
+    pub fn create(conference: &Conference, conn: &DbConnection) -> QueryResult<Conference> {
         diesel::insert_into(conferences::table)
             .values(conference)
-            .get_result(conn)
+            .get_result(&**conn)
             .expect("Error saving new conference")
     }
 
-    pub fn read(cid: i32, conn: DbConnection) -> QueryResult<Vec<Conference>> {
-        if id != 0 {
+    pub fn read(cid: i32, conn: &DbConnection) -> QueryResult<Vec<Conference>> {
+        if cid != 0 {
             conferences::table
                 .filter(conferences::id.eq(cid))
-                .load::<Conference>(&*conn)
+                .load::<Conference>(&**conn)
         } else {
             conferences::table
-                .load::<Conference>(&*conn)
+                .load::<Conference>(&**conn)
         }
     }
 
-    pub fn update(cid: i32, conference: Conference, conn: DbConnection) -> bool {
+    pub fn update(cid: i32, conference: &Conference, conn: &DbConnection) -> bool {
         diesel::update(conferences::table.find(cid))
-            .set(&conference)
-            .execute(&*conn).is_ok()
+            .set(conference)
+            .execute(&**conn).is_ok()
     }
 
-    pub fn delete(cid: i32, conn: DbConnection) -> bool {
-        diesel::delete(conferences::table.find(cid))
-            .set(&conference)
-            .execute(&*conn).is_ok()
+    pub fn delete(cid: i32, conn: &DbConnection) -> bool {
+        diesel::delete(conferences::table.find(cid)).execute(&**conn).is_ok()
     }
 }

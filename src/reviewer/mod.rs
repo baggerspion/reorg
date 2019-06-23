@@ -9,9 +9,9 @@ use self::model::Reviewer;
 use super::data::DbConnection;
 
 #[post("/", format = "application/json", data = "<reviewer>")]
-fn create(reviewer: Json<Reviewer>, conn: DbConnection) -> Result<JsonValue, Status> {
-    let insert = Reviewer { id: None, ..user.into_inner() };
-    Reviewer::create(insert, &conn)
+fn create(reviewer: Json<Reviewer>, conn: DbConnection) -> Result<Json<Reviewer>, Status> {
+    let insert = Reviewer { id: None, ..reviewer.into_inner() };
+    Reviewer::create(&insert, &conn)
         .map(Json)
         .map_err(|_| Status::InternalServerError)
 }
@@ -19,21 +19,21 @@ fn create(reviewer: Json<Reviewer>, conn: DbConnection) -> Result<JsonValue, Sta
 #[get("/<id>")]
 fn read(id: i32, conn: DbConnection) -> Result<JsonValue, Status> {
     Reviewer::read(id, &conn)
-        .map(|item| Json(json!(item)))
+        .map(|item| json!(item))
         .map_err(|_| Status::NotFound)
 }
 
 #[post("/<id>", format = "application/json", data = "<reviewer>")]
-fn update(id: i32, reviewer: Json<Reviewer>, conn: DbConnection) -> Result<JsonValue, Status> {
+fn update(id: i32, reviewer: Json<Reviewer>, conn: DbConnection) -> JsonValue {
     let update = Reviewer { id: Some(id), ..reviewer.into_inner() };
-    Json(json!({
-        "success": Reviewer::update(id, update, &connection)
-    }))
+    json!({
+        "success": Reviewer::update(id, &update, &conn)
+    })
 }
 
 #[delete("/<id>")]
 fn delete(id: i32, conn: DbConnection) -> JsonValue {
-    Json(json!({
+    json!({
         "success": Reviewer::delete(id, &conn)
-    }))
+    })
 }

@@ -1,12 +1,15 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
 pub mod model;
 pub mod schema;
 
-use rocket::{self, http::Status};
+use rocket::{self, http::Status, Rocket};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::Reviewer;
 use super::data::DbConnection;
+
+pub fn mount(rocket: Rocket) -> Rocket {
+    rocket
+        .mount("/reviewer", routes![create, read, update, delete])
+}
 
 #[post("/", format = "application/json", data = "<reviewer>")]
 fn create(reviewer: Json<Reviewer>, conn: DbConnection) -> Result<Json<Reviewer>, Status> {

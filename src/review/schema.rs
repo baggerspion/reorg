@@ -1,6 +1,6 @@
 table! {
     reviews (id) {
-        id -> Int4,
+        id -> Nullable<Int4>,
         reviewer_id -> Int4,
         submission_id -> Int4,
         private_comments -> Varchar,

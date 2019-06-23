@@ -1,6 +1,6 @@
 table! {
     conferences (id) {
-        id -> Int4,
+        id -> Nullable<Int4>,
         title -> Varchar,
         start_date -> Timestamp,
         end_date -> Timestamp,

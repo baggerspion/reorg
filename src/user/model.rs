@@ -1,7 +1,7 @@
-use crate::data::DbConnection;
 use crate::user::schema::users;
 use diesel;
 use diesel::prelude::*;
+use diesel::pg::PgConnection;
 
 #[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
@@ -14,31 +14,33 @@ pub struct User {
 }
 
 impl User {
-    pub fn create(user: &User, conn: &DbConnection) -> QueryResult<User> {
+    pub fn create(user: &User, conn: &PgConnection) -> QueryResult<User> {
         diesel::insert_into(users::table)
             .values(user)
-            .get_result(&**conn)
-            .expect("Error saving new conference")
+            .execute(conn)
+            .expect("Error saving new conference");
+
+        users::table.order(users::id.desc()).first(conn)
     }
 
-    pub fn read(id: i32, conn: &DbConnection) -> QueryResult<Vec<User>> {
+    pub fn read(id: i32, conn: &PgConnection) -> QueryResult<Vec<User>> {
         if id != 0 {
             users::table
                 .filter(users::id.eq(id))
-                .load::<User>(&**conn)
+                .load::<User>(conn)
         } else {
             users::table
-                .load::<User>(&**conn)
+                .load::<User>(conn)
         }
     }
 
-    pub fn update(id: i32, user: &User, conn: &DbConnection) -> bool {
+    pub fn update(id: i32, user: &User, conn: &PgConnection) -> bool {
         diesel::update(users::table.find(id))
             .set(user)
-            .execute(&**conn).is_ok()
+            .execute(conn).is_ok()
     }
 
-    pub fn delete(id: i32, conn: &DbConnection) -> bool {
-        diesel::delete(users::table.find(id)).execute(&**conn).is_ok()
+    pub fn delete(id: i32, conn: &PgConnection) -> bool {
+        diesel::delete(users::table.find(id)).execute(conn).is_ok()
     }
 }

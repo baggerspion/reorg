@@ -1,9 +1,9 @@
-use crate::data::DbConnection;
 use crate::reviewer::model::Reviewer;
 use crate::review::schema::reviews;
 use crate::submission::model::Submission;
 use diesel;
 use diesel::prelude::*;
+use diesel::PgConnection;
 
 #[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Reviewer)]
@@ -19,31 +19,33 @@ pub struct Review {
 }
 
 impl Review {
-    pub fn create(review: &Review, conn: &DbConnection) -> QueryResult<Review> {
+    pub fn create(review: &Review, conn: &PgConnection) -> QueryResult<Review> {
         diesel::insert_into(reviews::table)
             .values(review)
-            .get_result(&**conn)
-            .expect("Error saving new conference")
+            .execute(conn)
+            .expect("Error saving new conference");
+
+        reviews::table.order(reviews::id.desc()).first(conn)
     }
 
-    pub fn read(id: i32, conn: &DbConnection) -> QueryResult<Vec<Review>> {
+    pub fn read(id: i32, conn: &PgConnection) -> QueryResult<Vec<Review>> {
         if id != 0 {
             reviews::table
                 .filter(reviews::id.eq(id))
-                .load::<Review>(&**conn)
+                .load::<Review>(conn)
         } else {
             reviews::table
-                .load::<Review>(&**conn)
+                .load::<Review>(conn)
         }
     }
 
-    pub fn update(id: i32, review: &Review, conn: &DbConnection) -> bool {
+    pub fn update(id: i32, review: &Review, conn: &PgConnection) -> bool {
         diesel::update(reviews::table.find(id))
             .set(review)
-            .execute(&**conn).is_ok()
+            .execute(conn).is_ok()
     }
 
-    pub fn delete(id: i32, conn: &DbConnection) -> bool {
-        diesel::delete(reviews::table.find(id)).execute(&**conn).is_ok()
+    pub fn delete(id: i32, conn: &PgConnection) -> bool {
+        diesel::delete(reviews::table.find(id)).execute(conn).is_ok()
     }
 }

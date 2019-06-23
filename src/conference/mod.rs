@@ -1,10 +1,15 @@
 pub mod model;
 pub mod schema;
 
-use rocket::{self, http::Status};
+use rocket::{self, http::Status, Rocket};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::Conference;
 use super::data::DbConnection;
+
+pub fn mount(rocket: Rocket) -> Rocket {
+    rocket
+        .mount("/conference", routes![create, read, update, delete])
+}
 
 #[post("/", format = "application/json", data = "<conference>")]
 fn create(conference: Json<Conference>, conn: DbConnection) -> Result<Json<Conference>, Status> {

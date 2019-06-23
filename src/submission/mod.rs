@@ -1,12 +1,15 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
 pub mod model;
 pub mod schema;
 
-use rocket::{self, http::Status};
+use rocket::{self, http::Status, Rocket};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::Submission;
 use super::data::DbConnection;
+
+pub fn mount(rocket: Rocket) -> Rocket {
+    rocket
+        .mount("/submission", routes![create, read, update, delete])
+}
 
 #[post("/", format = "application/json", data = "<submission>")]
 fn create(submission: Json<Submission>, conn: DbConnection) -> Result<Json<Submission>, Status> {

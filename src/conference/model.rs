@@ -45,10 +45,10 @@ mod date_format {
 }
 
 impl Conference {
-    pub fn create(conference: &Conference, conn: &PgConnection) -> Conference {
+    pub fn create(conference: &Conference, conn: &PgConnection) -> QueryResult<Conference> {
         diesel::insert_into(conferences::table)
             .values(conference)
-            .get_result(conn)
+            .get_result(&*conn)
             .expect("Error saving new conference")
     }
 

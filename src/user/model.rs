@@ -18,7 +18,7 @@ impl User {
         diesel::insert_into(users::table)
             .values(user)
             .execute(conn)
-            .expect("Error saving new conference");
+            .expect("Error saving new user");
 
         users::table.order(users::id.desc()).first(conn)
     }

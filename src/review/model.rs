@@ -23,7 +23,7 @@ impl Review {
         diesel::insert_into(reviews::table)
             .values(review)
             .execute(conn)
-            .expect("Error saving new conference");
+            .expect("Error saving new review");
 
         reviews::table.order(reviews::id.desc()).first(conn)
     }

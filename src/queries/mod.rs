@@ -10,7 +10,8 @@ use rocket_contrib::json::JsonValue;
 
 pub fn mount(rocket: Rocket) -> Rocket {
     rocket
-        .mount("/queries", routes![read_conf_subs])
+        .mount("/queries", routes![read_conf_subs,
+                                   read_sub_revs])
 }
 
 /* Get the submissions to a given conference */

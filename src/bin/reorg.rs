@@ -10,6 +10,7 @@ fn main() {
         .manage(create_db_pool());
     
     rocket = reorg::conference::mount(rocket);
+    rocket = reorg::queries::mount(rocket);
     rocket = reorg::review::mount(rocket);
     rocket = reorg::reviewer::mount(rocket);
     rocket = reorg::submission::mount(rocket);

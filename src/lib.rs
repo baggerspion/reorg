@@ -9,6 +9,7 @@ extern crate dotenv;
 
 pub mod conference;
 pub mod data;
+pub mod queries;
 pub mod review;
 pub mod reviewer;
 pub mod submission;

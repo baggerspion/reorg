@@ -59,6 +59,7 @@ fn main() {
             id: None,
             conference_id: conf,
             user_id: rng.gen_range(1, 11),
+            status_id: rng.gen_range(1, 7),
             title: fake!(Lorem.sentence(4, 6)),
             content: fake!(Lorem.paragraph(7, 3)),
         }

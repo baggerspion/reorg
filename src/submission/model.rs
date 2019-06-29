@@ -13,6 +13,7 @@ pub struct Submission {
     pub id: Option<i32>,
     pub conference_id: i32,
     pub user_id: i32,
+    pub status_id: i32,
     pub title: String,
     pub content: String,
 }

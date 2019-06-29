@@ -12,5 +12,6 @@ pub mod data;
 pub mod queries;
 pub mod review;
 pub mod reviewer;
+pub mod status;
 pub mod submission;
 pub mod user;

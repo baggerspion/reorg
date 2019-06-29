@@ -62,6 +62,7 @@ fn main() {
             status_id: rng.gen_range(1, 7),
             title: fake!(Lorem.sentence(4, 6)),
             content: fake!(Lorem.paragraph(7, 3)),
+            tags: serde_json::from_str(r#"{"tags": ["Foo", "Bar", "Baz"]}"#).unwrap(),
         }
     }
 

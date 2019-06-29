@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS submissions (
 	user_id			INT NOT NULL,
     status_id       INT NOT NULL,
 	title			VARCHAR NOT NULL,
-	content			VARCHAR NOT NULL
+	content			VARCHAR NOT NULL,
+	tags			jsonb
 )

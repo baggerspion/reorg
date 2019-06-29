@@ -6,5 +6,6 @@ table! {
         status_id -> Int4,
         title -> Varchar,
         content -> Varchar,
+        tags -> Nullable<Jsonb>,
     }
 }

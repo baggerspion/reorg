@@ -15,7 +15,7 @@ path = "src/bin/seed.rs"
 [dependencies]
 bigdecimal = { version = ">= 0.0.10, < 0.0.15", features = ["serde"] }
 chrono = { version = "0.4.6" }
-diesel = { version = "1.4.2", features = ["bigdecimal", "chrono", "numeric", "postgres"] }
+diesel = { version = "1.4.2", features = ["bigdecimal", "chrono", "numeric", "postgres", "serde_json"] }
 dotenv = "0.14.1"
 fake = { version = "1.3.0", features = ["chrono"] }
 jwt = "0.4.0"

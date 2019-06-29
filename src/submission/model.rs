@@ -4,7 +4,6 @@ use crate::user::model::User;
 use diesel;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
-use serde_json::Value;
 
 #[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[belongs_to(Conference)]
@@ -17,7 +16,7 @@ pub struct Submission {
     pub status_id: i32,
     pub title: String,
     pub content: String,
-    pub tags: Option<Value>,
+    pub tags: Vec<String>,
 }
 
 impl Submission {

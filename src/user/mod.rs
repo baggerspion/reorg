@@ -1,14 +1,16 @@
+pub mod auth;
 pub mod model;
 pub mod schema;
 
+use crate::data::DbConnection;
 use rocket::{self, http::Status, Rocket};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::User;
-use super::data::DbConnection;
 
 pub fn mount(rocket: Rocket) -> Rocket {
     rocket
         .mount("/user", routes![create, read, update, delete])
+        .mount("/auth", routes![auth::login])
 }
 
 #[post("/", format = "application/json", data = "<user>")]

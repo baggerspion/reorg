@@ -5,5 +5,6 @@ table! {
         last_name -> Varchar,
         email -> Varchar,
         password -> Varchar,
+        roles -> Nullable<Array<Varchar>>,
     }
 }

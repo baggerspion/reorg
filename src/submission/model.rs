@@ -16,7 +16,7 @@ pub struct Submission {
     pub status_id: i32,
     pub title: String,
     pub content: String,
-    pub tags: Vec<String>,
+    pub tags: Option<Vec<String>>,
 }
 
 impl Submission {

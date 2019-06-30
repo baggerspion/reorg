@@ -6,8 +6,6 @@ extern crate rand;
 extern crate reorg;
 
 use chrono::NaiveDate;
-use crypto::digest::Digest;
-use crypto::sha2::Sha256;
 use diesel::prelude::{Connection, Identifiable, RunQueryDsl};
 use rand::Rng;
 use reorg::data::create_db_pool;
@@ -101,8 +99,6 @@ fn main() {
     }
 
     // Seed new data
-    let mut hasher = Sha256::new();
-    hasher.input_str("password");
     let new_user = User {
         id: None,
         first_name: "Max".to_string(),

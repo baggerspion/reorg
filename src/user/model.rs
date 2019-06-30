@@ -3,6 +3,12 @@ use diesel;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
 
+#[derive(Serialize, Deserialize)]
+pub struct Credentials {
+   pub email: String,
+   pub password: String,
+}
+
 #[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
 pub struct User {
@@ -43,5 +49,23 @@ impl User {
 
     pub fn delete(id: i32, conn: &PgConnection) -> bool {
         diesel::delete(users::table.find(id)).execute(conn).is_ok()
+    }
+
+    pub fn by_email_and_password(
+        email_: String, 
+        password_: String, 
+        conn: &PgConnection
+    ) -> Option<User> {
+        let res = users::table
+            .filter(users::email.eq(email_))
+            .filter(users::password.eq(password_))
+            .order(users::id)
+            .first(conn);
+        match res {
+            Ok(user) => Some(user),
+            Err(_) => {
+                None
+            }
+        }
     }
 }

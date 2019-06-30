@@ -40,3 +40,8 @@ By default REORG will be listening on port 8000 of the machine it is running. Ha
 ```sh
 curl "<server>:8000/submission/conf?conf_id=1"
 ```
+
+Get an authentication token:
+```sh
+curl -d '{"email": "fake@fake.com", "password": "password"}' -H "Content-Type: application/json" -X POST "localhost:8000/auth"
+```

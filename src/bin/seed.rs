@@ -73,6 +73,7 @@ fn main() {
             last_name: fake!(Name.last_name).to_string(),
             email: fake!(Internet.free_email),
             password: fake!(Lorem.word).to_string(),
+            roles: serde_json::from_str(r#"{"tags": ["Foo", "Bar", "Baz"]}"#).unwrap(),
         }
     }
 

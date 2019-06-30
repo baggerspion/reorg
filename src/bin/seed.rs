@@ -108,7 +108,7 @@ fn main() {
         first_name: "Max".to_string(),
         last_name: "Mustermann".to_string(),
         email: "fake@fake.com".to_string(),
-        password: hasher.result_str(),
+        password: "password".to_string(),
         roles: None,
     };
     match User::create(&new_user, &connection) {

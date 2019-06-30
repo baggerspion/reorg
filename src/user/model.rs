@@ -11,7 +11,7 @@ pub struct Credentials {
    pub password: String,
 }
 
-#[derive(AsChangeset, Associations, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
+#[derive(AsChangeset, Associations, Clone, Deserialize, Identifiable, Insertable, Queryable, Serialize)]
 #[table_name = "users"]
 pub struct User {
     pub id: Option<i32>,
@@ -24,8 +24,20 @@ pub struct User {
 
 impl User {
     pub fn create(user: &User, conn: &PgConnection) -> QueryResult<User> {
+        let mut hasher = Sha256::new();
+        hasher.input_str(&user.password);
+
+        let new_user = &User{
+            id: None,
+            first_name: user.first_name.clone(),
+            last_name: user.last_name.clone(),
+            email: user.email.clone(),
+            password: hasher.result_str(),
+            roles: None,
+        };
+        
         diesel::insert_into(users::table)
-            .values(user)
+            .values(new_user)
             .execute(conn)
             .expect("Error saving new user");
 
@@ -53,11 +65,7 @@ impl User {
         diesel::delete(users::table.find(id)).execute(conn).is_ok()
     }
 
-    pub fn by_email_and_password(
-        email_: String, 
-        password_: String, 
-        conn: &PgConnection
-    ) -> Option<User> {
+    pub fn by_email_and_password(email_: String, password_: String, conn: &PgConnection) -> Option<User> {
         let mut hasher = Sha256::new();
         hasher.input_str(&password_);
 

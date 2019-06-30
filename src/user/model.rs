@@ -1,4 +1,6 @@
 use crate::user::schema::users;
+use crypto::digest::Digest;
+use crypto::sha2::Sha256;
 use diesel;
 use diesel::prelude::*;
 use diesel::pg::PgConnection;
@@ -17,7 +19,7 @@ pub struct User {
     pub last_name: String,
     pub email: String,
     pub password: String,
-    pub roles: Vec<String>,
+    pub roles: Option<Vec<String>>,
 }
 
 impl User {
@@ -56,9 +58,12 @@ impl User {
         password_: String, 
         conn: &PgConnection
     ) -> Option<User> {
+        let mut hasher = Sha256::new();
+        hasher.input_str(&password_);
+
         let res = users::table
             .filter(users::email.eq(email_))
-            .filter(users::password.eq(password_))
+            .filter(users::password.eq(hasher.result_str()))
             .order(users::id)
             .first(conn);
         match res {

@@ -6,7 +6,9 @@ extern crate rand;
 extern crate reorg;
 
 use chrono::NaiveDate;
-use diesel::prelude::*;
+use crypto::digest::Digest;
+use crypto::sha2::Sha256;
+use diesel::prelude::{Connection, Identifiable, RunQueryDsl};
 use rand::Rng;
 use reorg::data::create_db_pool;
 use reorg::conference::model::Conference;
@@ -62,7 +64,7 @@ fn main() {
             status_id: rng.gen_range(1, 7),
             title: fake!(Lorem.sentence(4, 6)),
             content: fake!(Lorem.paragraph(7, 3)),
-            tags: serde_json::from_str(r#"{"tags": ["Foo", "Bar", "Baz"]}"#).unwrap(),
+            tags: None,
         }
     }
 
@@ -73,7 +75,7 @@ fn main() {
             last_name: fake!(Name.last_name).to_string(),
             email: fake!(Internet.free_email),
             password: fake!(Lorem.word).to_string(),
-            roles: serde_json::from_str(r#"{"tags": ["Foo", "Bar", "Baz"]}"#).unwrap(),
+            roles: None,
         }
     }
 
@@ -99,9 +101,24 @@ fn main() {
     }
 
     // Seed new data
+    let mut hasher = Sha256::new();
+    hasher.input_str("password");
+    let new_user = User {
+        id: None,
+        first_name: "Max".to_string(),
+        last_name: "Mustermann".to_string(),
+        email: "fake@fake.com".to_string(),
+        password: hasher.result_str(),
+        roles: None,
+    };
+    match User::create(&new_user, &connection) {
+        Ok(x) => println!("-> Created user: {}", x.id.unwrap()),
+        Err(y) => println!("-> Failed to create user: {}", y),
+    }
+
     let mut sub_id: i32 = 0;
     println!("{}", "- Creating users".to_string());
-    for _user in 0..10 {
+    for _ in 0..10 {
         match User::create(&generate_user(), &connection) {
             Ok(x) => println!("-> Created user: {}", x.id.unwrap()),
             Err(y) => println!("-> Failed to create user: {}", y),
@@ -127,7 +144,7 @@ fn main() {
 
         // Create the submissions and reviews
         println!("{}", "- Creating submissions".to_string());
-        for _x in 1..6 {
+        for _ in 1..6 {
             sub_id += 1;
             match Submission::create(&generate_submission(conf_id), &connection) {
                 Ok(x) => println!("-> Created submission: {}", x.id.unwrap()),

@@ -33,7 +33,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for ApiKey {
     }
 }
 
-#[post("/", data = "<credentials>")]
+#[post("/", format = "application/json", data = "<credentials>")]
 pub fn login(credentials: Json<Credentials>, conn: DbConnection) ->  Result<JsonValue, Status> {
     let header: Header = Default::default();
     let email = credentials.email.to_string();

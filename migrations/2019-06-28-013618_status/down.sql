@@ -1,1 +1,1 @@
-DROP TABLE 'status'
+DROP TABLE "status"

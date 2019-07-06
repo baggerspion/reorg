@@ -8,7 +8,14 @@ use super::model::{Credentials, User};
 
 pub struct ApiKey(pub String);
 
-pub fn read_token(key: &str) -> Result<String, String> {
+#[derive(Debug)]
+pub enum ApiKeyError {
+    BadCount,
+    Missing,
+    Invalid,
+}
+
+fn is_valid(key: &str) -> Result<String, String> {
     let token = Token::<Header, Registered>::parse(key)
         .map_err(|_| "Unable to parse key".to_string())?;
     if token.verify(b"secret_key", Sha256::new()) {
@@ -19,16 +26,17 @@ pub fn read_token(key: &str) -> Result<String, String> {
 }
 
 impl<'a, 'r> FromRequest<'a, 'r> for ApiKey {
-    type Error = ();
+    type Error = ApiKeyError;
 
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<ApiKey, ()> {
-        let keys: Vec<_> = request.headers().get("Authentication").collect();
-        if keys.len() != 1 {
-            return Outcome::Forward(());
-        }
-        match read_token(keys[0]) {
-            Ok(claim) => Outcome::Success(ApiKey(claim)),
-            Err(_) => Outcome::Forward(())
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<Self, Self::Error> {
+        let keys: Vec<_> = request.headers().get("x-api-key").collect();
+        match keys.len() {
+            0 => Outcome::Failure((Status::BadRequest, ApiKeyError::Missing)),
+            1 => match is_valid(&keys[0].to_string()) {
+                Ok(_) => Outcome::Success(ApiKey(keys[0].to_string())),
+                Err(_) => Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid)),
+            },
+            _ => Outcome::Failure((Status::BadRequest, ApiKeyError::BadCount)),
         }
     }
 }

@@ -6,7 +6,7 @@ extern crate rand;
 extern crate reorg;
 
 use chrono::NaiveDate;
-use diesel::prelude::{Connection, Identifiable, RunQueryDsl};
+use diesel::prelude::{Connection, RunQueryDsl};
 use rand::Rng;
 use reorg::data::create_db_pool;
 use reorg::conference::model::Conference;

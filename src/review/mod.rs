@@ -13,7 +13,7 @@ pub fn mount(rocket: Rocket) -> Rocket {
 }
 
 #[post("/", format = "application/json", data = "<review>")]
-fn create(review: Json<Review>, key: ApiKey, conn: DbConnection) -> Result<Json<Review>, Status> {
+fn create(review: Json<Review>, _key: ApiKey, conn: DbConnection) -> Result<Json<Review>, Status> {
     let insert = Review { id: None, ..review.into_inner() };
     Review::create(&insert, &conn)
         .map(Json)
@@ -21,14 +21,14 @@ fn create(review: Json<Review>, key: ApiKey, conn: DbConnection) -> Result<Json<
 }
 
 #[get("/<id>")]
-fn read(id: i32, key: ApiKey, conn: DbConnection) -> Result<JsonValue, Status> {
+fn read(id: i32, _key: ApiKey, conn: DbConnection) -> Result<JsonValue, Status> {
     Review::read(id, &conn)
         .map(|item| json!(item))
         .map_err(|_| Status::NotFound)
 }
 
 #[post("/<id>", format = "application/json", data = "<review>")]
-fn update(id: i32, review: Json<Review>, key: ApiKey, conn: DbConnection) -> JsonValue {
+fn update(id: i32, review: Json<Review>, _key: ApiKey, conn: DbConnection) -> JsonValue {
     let update = Review { id: Some(id), ..review.into_inner() };
     json!({
         "success": Review::update(id, &update, &conn)
@@ -36,7 +36,7 @@ fn update(id: i32, review: Json<Review>, key: ApiKey, conn: DbConnection) -> Jso
 }
 
 #[delete("/<id>")]
-fn delete(id: i32, key: ApiKey, conn: DbConnection) -> JsonValue {
+fn delete(id: i32, _key: ApiKey, conn: DbConnection) -> JsonValue {
     json!({
         "success": Review::delete(id, &conn)
     })

@@ -13,7 +13,7 @@ pub fn mount(rocket: Rocket) -> Rocket {
 }
 
 #[post("/", format = "application/json", data = "<conference>")]
-fn create(conference: Json<Conference>, key: ApiKey, conn: DbConnection) -> Result<Json<Conference>, Status> {
+fn create(conference: Json<Conference>, _key: ApiKey, conn: DbConnection) -> Result<Json<Conference>, Status> {
     let insert = Conference { id: None, ..conference.into_inner() };
     Conference::create(&insert, &conn)
         .map(Json)
@@ -21,14 +21,14 @@ fn create(conference: Json<Conference>, key: ApiKey, conn: DbConnection) -> Resu
 }
 
 #[get("/<id>")]
-fn read(id: i32, key: ApiKey, conn: DbConnection) -> Result<JsonValue, Status> {
+fn read(id: i32, _key: ApiKey, conn: DbConnection) -> Result<JsonValue, Status> {
     Conference::read(id, &conn)
         .map(|item| json!(item))
         .map_err(|_| Status::NotFound)
 }
 
 #[post("/<id>", format = "application/json", data = "<conference>")]
-fn update(id: i32, conference: Json<Conference>, key: ApiKey, conn: DbConnection) -> JsonValue {
+fn update(id: i32, conference: Json<Conference>, _key: ApiKey, conn: DbConnection) -> JsonValue {
     let update = Conference { id: Some(id), ..conference.into_inner() };
     json!({
         "success": Conference::update(id, &update, &conn)
@@ -36,7 +36,7 @@ fn update(id: i32, conference: Json<Conference>, key: ApiKey, conn: DbConnection
 }
 
 #[delete("/<id>")]
-fn delete(id: i32, key: ApiKey, conn: DbConnection) -> JsonValue {
+fn delete(id: i32, _key: ApiKey, conn: DbConnection) -> JsonValue {
     json!({
         "success": Conference::delete(id, &conn)
     })

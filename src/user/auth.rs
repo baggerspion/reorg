@@ -1,11 +1,10 @@
 use crate::data::DbConnection;
 use chrono::{Duration, Utc};
-use crypto::sha2::Sha256;
-use jwt::{Header, Registered, Token};
+use jwt::errors::ErrorKind;
+use jwt::{encode, decode, Header, Algorithm, Validation};
 use rocket::{http::Status, Outcome};
 use rocket::request::{self, Request, FromRequest};
 use rocket_contrib::json::{Json, JsonValue};
-use std::convert::TryInto;
 use super::model::{Credentials, User};
 
 pub struct ApiKey(pub String);
@@ -24,14 +23,24 @@ pub enum UserType {
     Reviewer,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct Claims {
+    iss: String,
+    sub: String,
+    exp: i64,
+}
+
 impl ApiKey {
-    fn is_valid(&self) -> Result<String, String> {
-        let token = Token::<Header, Registered>::parse(&self.0)
-            .map_err(|_| "Unable to parse key".to_string())?;
-        if token.verify(b"secret_key", Sha256::new()) {
-            token.claims.sub.ok_or("Claims not valid".to_string())
-        } else {
-            Err("Token not valid".to_string())
+    fn is_valid(&self) -> Result<Claims, String> {
+        let secret = "secret_key";
+        let validation = Validation {leeway: 60, iss: Some("Reorg".to_string()), ..Validation::default()};
+        match decode::<Claims>(&self.0, secret.as_ref(), &validation) {
+            Ok(claim) => Ok(claim.claims),
+            Err(err) => match *err.kind() {
+                ErrorKind::InvalidToken => Err("Token is invalid".to_string()),
+                ErrorKind::InvalidIssuer => Err("Issuer is invalid".to_string()),
+                _ => Err("Some other error".to_string()),
+            }
         }
     }
 }
@@ -54,24 +63,28 @@ impl<'a, 'r> FromRequest<'a, 'r> for ApiKey {
 
 #[post("/", format = "application/json", data = "<credentials>")]
 pub fn login(credentials: Json<Credentials>, conn: DbConnection) ->  Result<JsonValue, Status> {
-    let header: Header = Default::default();
     let email = credentials.email.to_string();
     let password = credentials.password.to_string();
-    let hour_from_now = Utc::now() + Duration::hours(1);
 
-    match User::by_email_and_password(email, password, &conn) {
+    match User::by_email_and_password(&email, &password, &conn) {
         None => {
             Err(Status::NotFound)
         },
-        Some(user) => {
-            let claims = Registered {
-                sub: Some(user.email.into()),
-                exp: Some((hour_from_now.timestamp() as i64).try_into().unwrap()),
-                ..Default::default()
-            };
-            let token = Token::new(header, claims);
+        Some(_) => {
+            let secret = "secret_key";
+            let hour_from_now = Utc::now() + Duration::hours(1);
 
-            token.signed(b"secret_key", Sha256::new())
+            let mut header = Header::default();
+            header.alg = Algorithm::HS256;
+            header.typ = Some("JWT".to_owned());
+
+            let claims = Claims {
+                iss: "Reorg".to_owned(),
+                sub: email.to_owned(),
+                exp: hour_from_now.timestamp(),
+            };     
+
+            encode(&header, &claims, secret.as_ref())
                 .map(|message| json!({ "success": true, "token": message }))
                 .map_err(|_| Status::InternalServerError)
         }

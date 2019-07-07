@@ -1,6 +1,7 @@
 pub mod model;
 pub mod schema;
 
+use crate::user::auth::ApiKey;
 use rocket::{self, http::Status, Rocket};
 use rocket_contrib::json::{Json, JsonValue};
 use self::model::Conference;
@@ -12,7 +13,7 @@ pub fn mount(rocket: Rocket) -> Rocket {
 }
 
 #[post("/", format = "application/json", data = "<conference>")]
-fn create(conference: Json<Conference>, conn: DbConnection) -> Result<Json<Conference>, Status> {
+fn create(conference: Json<Conference>, _key: ApiKey, conn: DbConnection) -> Result<Json<Conference>, Status> {
     let insert = Conference { id: None, ..conference.into_inner() };
     Conference::create(&insert, &conn)
         .map(Json)
@@ -20,14 +21,14 @@ fn create(conference: Json<Conference>, conn: DbConnection) -> Result<Json<Confe
 }
 
 #[get("/<id>")]
-fn read(id: i32, conn: DbConnection) -> Result<JsonValue, Status> {
+fn read(id: i32, _key: ApiKey, conn: DbConnection) -> Result<JsonValue, Status> {
     Conference::read(id, &conn)
         .map(|item| json!(item))
         .map_err(|_| Status::NotFound)
 }
 
 #[post("/<id>", format = "application/json", data = "<conference>")]
-fn update(id: i32, conference: Json<Conference>, conn: DbConnection) -> JsonValue {
+fn update(id: i32, conference: Json<Conference>, _key: ApiKey, conn: DbConnection) -> JsonValue {
     let update = Conference { id: Some(id), ..conference.into_inner() };
     json!({
         "success": Conference::update(id, &update, &conn)
@@ -35,7 +36,7 @@ fn update(id: i32, conference: Json<Conference>, conn: DbConnection) -> JsonValu
 }
 
 #[delete("/<id>")]
-fn delete(id: i32, conn: DbConnection) -> JsonValue {
+fn delete(id: i32, _key: ApiKey, conn: DbConnection) -> JsonValue {
     json!({
         "success": Conference::delete(id, &conn)
     })

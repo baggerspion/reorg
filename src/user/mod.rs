@@ -5,6 +5,7 @@ pub mod schema;
 use crate::data::DbConnection;
 use rocket::{self, http::Status, Rocket};
 use rocket_contrib::json::{Json, JsonValue};
+use self::auth::ApiKey;
 use self::model::User;
 
 pub fn mount(rocket: Rocket) -> Rocket {
@@ -14,7 +15,7 @@ pub fn mount(rocket: Rocket) -> Rocket {
 }
 
 #[post("/", format = "application/json", data = "<user>")]
-fn create(user: Json<User>, conn: DbConnection) -> Result<Json<User>, Status> {
+fn create(user: Json<User>, _key: ApiKey, conn: DbConnection) -> Result<Json<User>, Status> {
     let insert = User { id: None, ..user.into_inner() };
     User::create(&insert, &conn)
         .map(Json)
@@ -22,14 +23,14 @@ fn create(user: Json<User>, conn: DbConnection) -> Result<Json<User>, Status> {
 }
 
 #[get("/<id>")]
-fn read(id: i32, conn: DbConnection) -> Result<JsonValue, Status> {
+fn read(id: i32, _key: ApiKey, conn: DbConnection) -> Result<JsonValue, Status> {
     User::read(id, &conn)
         .map(|item| json!(item))
         .map_err(|_| Status::NotFound)
 }
 
 #[post("/<id>", format = "application/json", data = "<user>")]
-fn update(id: i32, user: Json<User>, conn: DbConnection) -> JsonValue {
+fn update(id: i32, user: Json<User>, _key: ApiKey, conn: DbConnection) -> JsonValue {
     let update = User { id: Some(id), ..user.into_inner() };
     json!({
         "success": User::update(id, &update, &conn)
@@ -37,7 +38,7 @@ fn update(id: i32, user: Json<User>, conn: DbConnection) -> JsonValue {
 }
 
 #[delete("/<id>")]
-fn delete(id: i32, conn: DbConnection) -> JsonValue {
+fn delete(id: i32, _key: ApiKey, conn: DbConnection) -> JsonValue {
     json!({
         "success": User::delete(id, &conn)
     })

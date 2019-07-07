@@ -65,7 +65,7 @@ impl User {
         diesel::delete(users::table.find(id)).execute(conn).is_ok()
     }
 
-    pub fn by_email_and_password(email_: String, password_: String, conn: &PgConnection) -> Option<User> {
+    pub fn by_email_and_password(email_: &String, password_: &String, conn: &PgConnection) -> Option<User> {
         let mut hasher = Sha256::new();
         hasher.input_str(&password_);
 

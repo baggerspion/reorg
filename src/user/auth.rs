@@ -1,5 +1,5 @@
 use crate::data::DbConnection;
-use chrono::{Duration, Utc};
+use chrono::{Duration, Local};
 use jwt::errors::ErrorKind;
 use jwt::{encode, decode, Header, Algorithm, Validation};
 use rocket::{http::Status, Outcome};
@@ -72,7 +72,7 @@ pub fn login(credentials: Json<Credentials>, conn: DbConnection) ->  Result<Json
         },
         Some(_) => {
             let secret = "secret_key";
-            let hour_from_now = Utc::now() + Duration::hours(1);
+            let hour_from_now = Local::now() + Duration::hours(1);
 
             let mut header = Header::default();
             header.alg = Algorithm::HS256;

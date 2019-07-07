@@ -37,11 +37,13 @@ cargo run --bin reorg
 
 ## Using REORG
 By default REORG will be listening on port 8000 of the machine it is running. Having seeded data, you can test the REORG server by, for example:
+
+### Get an authentication key:
 ```sh
-curl "<server>:8000/submission/conf?conf_id=1"
+curl -H "Content-Type: application/json" -X POST -d '{"email": "fake@fake.com", "password": "password"}' "localhost:8000/auth"
 ```
 
-Get an authentication token:
+### Find the submissions to a specific conference
 ```sh
-curl -d '{"email": "fake@fake.com", "password": "password"}' -H "Content-Type: application/json" -X POST "localhost:8000/auth"
+curl -H "x-api-key: <your key here>" "localhost:8000/queries/conference/<conference id>/submissions"
 ```

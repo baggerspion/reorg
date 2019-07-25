@@ -73,6 +73,8 @@ fn main() {
             last_name: fake!(Name.last_name).to_string(),
             email: fake!(Internet.free_email),
             password: fake!(Lorem.word).to_string(),
+            twitter: None,
+            website: None,
             roles: None,
         }
     }
@@ -105,6 +107,8 @@ fn main() {
         last_name: "Mustermann".to_string(),
         email: "fake@fake.com".to_string(),
         password: "password".to_string(),
+        twitter: None,
+        website: None,
         roles: None,
     };
     match User::create(&new_user, &connection) {

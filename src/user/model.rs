@@ -19,6 +19,8 @@ pub struct User {
     pub last_name: String,
     pub email: String,
     pub password: String,
+    pub twitter: Option<String>,
+    pub website: Option<String>,
     pub roles: Option<Vec<String>>,
 }
 
@@ -33,6 +35,8 @@ impl User {
             last_name: user.last_name.clone(),
             email: user.email.clone(),
             password: hasher.result_str(),
+            twitter: user.twitter.clone(),
+            website: user.website.clone(),
             roles: None,
         };
         

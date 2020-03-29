@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/therealpadams/reorg#readme",
   "dependencies": {
+    "faunadb": "^2.13.1",
     "next": "^9.3.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

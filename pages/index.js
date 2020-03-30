@@ -9,15 +9,16 @@ export default function Index() {
 
   return (
     <Layout>
-      <div>
-        <ul>
-        {
-        data ? data.conferences.map(conference =>
-          <li>{conference.data.title}: {conference.data.start_date}</li>
-	      ) : <p>Loading...</p>
-        }
-	      </ul>
-      </div>
+      <h2>Welcome to Reorg.</h2>
+      <p>This is an experimental system to help manage talk submissions to <a href="https://www.writethedocs.org">Write The Docs</a> events.</p>
+      <h3>Conferences</h3>
+      <ul>
+      {
+      data ? data.conferences.map(conference =>
+        <li>{conference.data.title}: {conference.data.start_date}</li>
+	    ) : <p>Loading...</p>
+      }
+	    </ul>
     </Layout>
   );
 }

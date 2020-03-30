@@ -8,7 +8,7 @@ export default function Conference() {
     const { data, error } = useSWR(`/api/conference?conf=${router.query.id}`, fetch);
     
     if (error) return <div>Failed to load conference data!</div>
-    if (!data ) return <div>Loading...</div>
+    if (!data) return <div>Loading...</div>
 
     return (
         <Layout>

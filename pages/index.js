@@ -24,7 +24,7 @@ export default function Index() {
       <ul>
       {
       data ? data.conferences.map(conference =>
-        <ConfLink id={conference.ref} title={conference.data.title} date={conference.data.start_date} />
+        <ConfLink id={conference.data.id} title={conference.data.title} date={conference.data.start_date} />
       ) : <p>Loading...</p>
       }
 	    </ul>

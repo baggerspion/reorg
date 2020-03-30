@@ -14,20 +14,15 @@ export default async (req, res) => {
       return [];
     }
 
-    let conferences = [];
-
-    await client.paginate(
-      q.Match(
-        q.Index('all_conferences')
+    const conf = await client.query(
+      q.Get(
+        q.Ref(
+          q.Collection('conferences'), req.query.conf
+        )
       )
-    )    
-    .map(ref => q.Get(ref))
-    .each(page => {
-      conferences = conferences.concat(page);
-    });
-	  
-    res.json(conferences);
+    ); 
+    res.json(conf);
   } catch (error) {
     res.status(500).json({ error });
-  }
-};
+  }     
+}

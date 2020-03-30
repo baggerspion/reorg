@@ -14,7 +14,7 @@ const ConfLink = props => (
 export default function Index() {
   const { data, error } = useSWR('/api/conferences', fetch);
   
-  if (error) return <div>failed to load</div>
+  if (error) return <div>Failed to load conference data!</div>
 
   return (
     <Layout>
@@ -23,8 +23,8 @@ export default function Index() {
       <h3>Conferences</h3>
       <ul>
       {
-      data ? data.conferences.map(conference =>
-        <ConfLink id={conference.data.id} title={conference.data.title} date={conference.data.start_date} />
+      data ? data.map(conference =>
+        <ConfLink id={conference['ref']['@ref']['id']} title={conference.data.title} date={conference.data.start_date} />
       ) : <p>Loading...</p>
       }
 	    </ul>

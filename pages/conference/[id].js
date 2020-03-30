@@ -3,7 +3,7 @@ import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
 
-const Applicants = props => {
+const Submissions = props => {
     const { data, error } = useSWR(`/api/submissions?id=${props.id}`, fetch);
     if (error) return <div>Failed to load submissions data!</div>
     if (!data) return <div>Loading...</div>
@@ -32,8 +32,8 @@ export default function Conference() {
     return (
         <Layout>
             <h2>{data.data.title}: {data.data.start_date}</h2>
-            <h3>Applicants</h3>
-            <Applicants id={data['ref']['@ref']['id']} />
+            <h3>Submissions</h3>
+            <Submissions id={data['ref']['@ref']['id']} />
             <h3>Resources</h3>
             <h3>Reviewers</h3>
             <ul>

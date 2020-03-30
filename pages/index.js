@@ -1,6 +1,15 @@
 import fetch from '../components/Fetch'
 import Layout from '../components/Layout'
+import Link from 'next/link';
 import useSWR from 'swr'
+
+const ConfLink = props => (
+  <li>
+    <Link href="/conference/[id]" as={`/conference/${props.id}`}>
+      <a>{props.title}</a>
+    </Link>: {props.date}
+  </li>
+);
 
 export default function Index() {
   const { data, error } = useSWR('/api/conferences', fetch);
@@ -15,8 +24,8 @@ export default function Index() {
       <ul>
       {
       data ? data.conferences.map(conference =>
-        <li>{conference.data.title}: {conference.data.start_date}</li>
-	    ) : <p>Loading...</p>
+        <ConfLink id={conference.ref} title={conference.data.title} date={conference.data.start_date} />
+      ) : <p>Loading...</p>
       }
 	    </ul>
     </Layout>

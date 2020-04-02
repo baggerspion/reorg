@@ -35,9 +35,7 @@ export default function Conference() {
             <h3>Reviewers</h3>
             <ul>
             {
-            data.data.reviewers ? (
-                data.data.reviewers.map(rev => <FullName id={rev} />
-            )) : ( <li>This conference has no reviewers.</li> )
+                data.data.reviewers.map((name) => <FullName id={name} />)
             }
             </ul>
         </Layout>

@@ -1,6 +1,6 @@
 import fetch from '../../../components/Fetch'
+import FullName from '../../../components/Name'
 import Layout from '../../../components/Layout'
-import Name from '../../../components/Name'
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
 
@@ -12,7 +12,7 @@ const Submission = props => {
     return (
         data.map((element) =>
             <tr>
-                <td>{element.data.author.map((name) => <Name id={name} />)}</td>
+                <td><ul>{element.data.author.map((name) => <FullName id={name} />)}</ul></td>
                 <td>{element.data.title}</td>
                 <td></td>
                 <td></td>

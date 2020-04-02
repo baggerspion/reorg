@@ -6,7 +6,7 @@ const FullName = props => {
     if (error) return <div>Failed to load conference data!</div>
 
     return (
-        <li>{data ? data.data.first_name + " " + data.data.last_name : "Loading..."}</li>
+        <span>{data ? data.data.first_name + " " + data.data.last_name : "Loading..."}</span>
     );
 };
 

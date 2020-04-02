@@ -1,21 +1,26 @@
 import fetch from '../../../components/Fetch'
 import Layout from '../../../components/Layout'
+import Name from '../../../components/Name'
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
 
 const Submission = props => {
     const { data, error } = useSWR("/api/submissions?id=" + props.id, fetch);
-    if (error) return <div>Error loading submission details.</div>
-    if (!data) return <div>Loading submissions...</div>
-
-    const items = data.map((element) =>
-        <li>{element.data.title}</li>
-    );
+    if (error) return <tr><td colSpan="7">Error loading submission details.</td></tr>
+    if (!data) return <tr><td colSpan="7">Loading submissions...</td></tr>
 
     return (
-       <ul>
-           {items}
-       </ul>
+        data.map((element) =>
+            <tr>
+                <td>{element.data.author.map((name) => <Name id={name} />)}</td>
+                <td>{element.data.title}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>❌</td>
+                <td></td>
+            </tr>
+        )
     )
 };
 
@@ -29,7 +34,22 @@ export default function Conference() {
     return (
         <Layout>
             <h2>Submissions</h2>
-            <Submission id={data['ref']['@ref']['id']} />
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Title</th>
+                        <th>Your Review</th>
+                        <th>Score</th>
+                        <th>Allocated</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <Submission id={data['ref']['@ref']['id']} />
+                </tbody>
+            </table>
         </Layout>
     )
 }

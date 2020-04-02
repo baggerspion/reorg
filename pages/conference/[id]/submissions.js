@@ -3,6 +3,7 @@ import FullName from '../../../components/Name'
 import Layout from '../../../components/Layout'
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
+import Score from '../../../components/Score'
 
 const Submission = props => {
     const { data, error } = useSWR("/api/submissions?id=" + props.id, fetch);
@@ -15,7 +16,7 @@ const Submission = props => {
                 <td><ul>{element.data.author.map((name) => <FullName id={name} />)}</ul></td>
                 <td>{element.data.title}</td>
                 <td></td>
-                <td></td>
+                <td><Score data={element.data.reviews} /></td>
                 <td></td>
                 <td>❌</td>
                 <td></td>

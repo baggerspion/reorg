@@ -1,24 +1,21 @@
-import fetch from '../../components/Fetch'
-import Layout from '../../components/Layout';
+import fetch from '../../../components/Fetch'
+import FullName from '../../../components/Name'
+import Layout from '../../../components/Layout';
+import Link from 'next/link'
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
 
 const Submissions = props => {
+    const router = useRouter();
     const { data, error } = useSWR(`/api/submissions?id=${props.id}`, fetch);
     if (error) return <div>Failed to load submissions data!</div>
     if (!data) return <div>Loading...</div>
 
     return (
+        <>
         <p>{data.length > 0 ? <b>{data.length}</b> : "No"} {data.length == 1 ? "submission" : "submissions"} received.</p>
-    );
-};
-
-const Reviewer = props => {
-    const { data, error } = useSWR(`/api/user?id=${props.id}`, fetch);
-    if (error) return <div>Failed to load conference data!</div>
-
-    return (
-        <li>{data ? data.data.first_name + " " + data.data.last_name : "Loading..."}</li>
+        {data.length > 0 ? <p><Link href={"/conference/" + router.query.id + "/submissions"}><a>View Submissions</a></Link></p> : ""}
+        </>
     );
 };
 
@@ -39,7 +36,7 @@ export default function Conference() {
             <ul>
             {
             data.data.reviewers ? (
-                data.data.reviewers.map(rev => <Reviewer id={rev} />
+                data.data.reviewers.map(rev => <FullName id={rev} />
             )) : ( <li>This conference has no reviewers.</li> )
             }
             </ul>

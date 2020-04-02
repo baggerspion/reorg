@@ -17,7 +17,7 @@ export default async (req, res) => {
     const conf = await client.query(
       q.Get(
         q.Match(
-          q.Index('conf_titles'), req.query.conf
+          q.Index('conference_by_id'), req.query.conf
         )
       )
     ); 

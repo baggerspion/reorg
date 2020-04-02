@@ -1,4 +1,5 @@
 .env
+seed/
 
 # Logs
 logs

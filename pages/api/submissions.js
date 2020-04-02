@@ -18,7 +18,7 @@ export default async (req, res) => {
 
     await client.paginate(
       q.Match(
-        q.Index('subs_conference'), req.query.id
+        q.Index('subs_by_conference'), req.query.id
       )
     )    
     .map(ref => q.Get(ref))

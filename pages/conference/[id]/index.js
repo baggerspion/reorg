@@ -35,7 +35,7 @@ export default function Conference() {
             <h3>Reviewers</h3>
             <ul>
             {
-                data.data.reviewers.map((name) => <FullName id={name} />)
+                data.data.reviewers.map((name) => <li><FullName id={name} /></li>)
             }
             </ul>
         </Layout>

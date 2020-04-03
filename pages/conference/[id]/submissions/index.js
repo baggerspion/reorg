@@ -1,24 +1,28 @@
-import fetch from '../../../components/Fetch'
-import FullName from '../../../components/Name'
-import Layout from '../../../components/Layout'
+import fetch from '../../../../components/Fetch'
+import FullName from '../../../../components/Name'
+import Layout from '../../../../components/Layout'
+import Link from 'next/link'
 import { useRouter } from 'next/router';
 import useSWR from 'swr'
-import Score from '../../../components/Score'
+import Score from '../../../../components/Score'
 
 const Submission = props => {
+    const router = useRouter();
     const { data, error } = useSWR("/api/submissions?id=" + props.id, fetch);
     if (error) return <tr><td colSpan="7">Error loading submission details.</td></tr>
     if (!data) return <tr><td colSpan="7">Loading submissions...</td></tr>
 
+    const viewLink = "/conference/" + router.query.id + "/submissions/"
+
     return (
         data.map((element) =>
             <tr>
-                <td><ul>{element.data.author.map((name) => <FullName id={name} />)}</ul></td>
+                <td><ul>{element.data.author.map((name) => <li><FullName id={name} /></li>)}</ul></td>
                 <td>{element.data.title}</td>
                 <td></td>
                 <td><Score data={element.data.reviews} /></td>
-                <td></td>
                 <td>❌</td>
+                <td><Link href={viewLink + element['ref']['@ref']['id']}><a>View</a></Link></td>
                 <td></td>
             </tr>
         )

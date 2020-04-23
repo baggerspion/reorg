@@ -1,0 +1,35 @@
+type Conference {
+    name: String!
+    short_name: String!
+    start_date: Date!
+    end_date: Date
+    venue: String!
+    address: String!
+    country: String!
+    email: String!
+    web: String!
+    reviewers: [User!]! @relation(name: "Reviewer")
+    submissions: [Submission!] @relation
+}
+
+type Submission {
+    conference: Conference!
+    accepted: Boolean!
+    title: String!
+    abstract: String!
+    authors: [User!]! @relation(name: "Author")
+}
+
+type User {
+    conferences: [Conference!] @relation(name: "Reviewer")
+    submissions: [Submission!] @relation(name: "Author")
+    first_name: String!
+    last_name: String!
+    email: String!
+}
+
+type Query {
+    allConferences: [Conference]
+    allSubmissions: [Submission]
+    allUsers: [User]
+}

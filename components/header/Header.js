@@ -18,15 +18,9 @@ function Header() {
             </div>
             <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul className="navbar-nav ml-auto">
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">About</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">User</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">Logout</a>
-                    </li>
+                    <HeaderLink name="About" href="/about" />
+                    <HeaderLink name="User" href="/user" />
+                    <HeaderLink name="Logout" href="/logout" />
                 </ul>
             </div>
         </nav>

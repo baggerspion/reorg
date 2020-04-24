@@ -1,7 +1,6 @@
 import allConferences from '../../gql/allConferences';
 import ConferenceList from '../../components/conference/ConferenceList';
 import Layout from '../../layouts/Layout';
-import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { withApollo } from '../../libs/apollo';
 

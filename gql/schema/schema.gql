@@ -7,7 +7,8 @@ type Conference {
     country: String!
     email: String!
     web: String!
-    committee: [User!]! @relation(name: "Committtee")
+    submissions: [Submission!] @relation
+    committee: [User!]! @relation(name: "Committee")
 }
 
 type Submission {
@@ -20,7 +21,7 @@ type Submission {
 }
 
 type User {
-    committees: [Conference!] @relation(name: "Committtee")
+    committees: [Conference!] @relation(name: "Committee")
     submissions: [Submission!] @relation(name: "Author")
     first_name: String!
     last_name: String!

@@ -1,1 +1,2 @@
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+# Reorg
+A JAMstack reimplementation of the [Write The Docs](https://www.writethedocs.org) conference submission system.

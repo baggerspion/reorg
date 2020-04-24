@@ -1,0 +1,28 @@
+type Conference {
+    name: String!
+    start_date: Date!
+    end_date: Date
+    venue: String!
+    address: String!
+    country: String!
+    email: String!
+    web: String!
+    committee: [User!]! @relation(name: "Committtee")
+}
+
+type Submission {
+    conference: Conference!
+    accepted: Boolean!
+    title: String!
+    presenter: User!
+    abstract: String!
+    authors: [User!]! @relation(name: "Author")
+}
+
+type User {
+    committees: [Conference!] @relation(name: "Committtee")
+    submissions: [Submission!] @relation(name: "Author")
+    first_name: String!
+    last_name: String!
+    email: String!
+}

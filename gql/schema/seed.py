@@ -94,7 +94,7 @@ def create_submissions():
                 "accepted": False,
                 "title": fake.sentence(nb_words=random.randint(3, 6) + 1),
                 "abstract": fake.paragraph(),
-                "status": random.sample(["SUBMITTED", "SELECTED", "REJECTED", "WAITING"] , 1)
+                "status": random.sample(["SUBMITTED", "SELECTED", "REJECTED", "WAITING"] , 1)[0]
             }
             submissions.append(new_submission)
 

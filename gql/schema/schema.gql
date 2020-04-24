@@ -7,6 +7,7 @@ enum Status {
 
 type Conference {
     name: String!
+    short_name: String!
     start_date: Date!
     end_date: Date
     venue: String!
@@ -14,33 +15,44 @@ type Conference {
     country: String!
     email: String!
     web: String!
+    reviewers: [Reviewer!]! @relation
     submissions: [Submission!] @relation
-    committee: [User!]! @relation(name: "Committee")
 }
 
 type Review {
+    reviewer: Reviewer!
     submission: Submission!
-    reviewer: User!
     score: Int!
     public: String
     private: String
+}
+
+type Reviewer {
+    conference: Conference!
+    reviewer: User!
+    reviews: [Review!] @relation
 }
 
 type Submission {
     conference: Conference!
     accepted: Boolean!
     title: String!
-    presenter: User!
     abstract: String!
     authors: [User!]! @relation(name: "Author")
     reviews: [Review!] @relation
-    state: Status!
+    status: Status!
 }
 
 type User {
-    committees: [Conference!] @relation(name: "Committee")
+    committees: [Reviewer!] @relation
     submissions: [Submission!] @relation(name: "Author")
     first_name: String!
     last_name: String!
     email: String!
+}
+
+type Query {
+    allConferences: [Conference]
+    allSubmissions: [Submission]
+    allUsers: [User]
 }

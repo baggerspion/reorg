@@ -55,4 +55,5 @@ type Query {
     allConferences: [Conference]
     allSubmissions: [Submission]
     allUsers: [User]
+    conferenceByShortName(short_name: String): Conference
 }

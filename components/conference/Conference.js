@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const Conference = (props) => {
-    const reviewed = props.conf.submissions.data.filter(review => review != "SUBMITTED");
+    const reviewed = props.conf.submissions.data.filter(review => review['status'] != "SUBMITTED");
 
     return (
         <tr key={props.conf._id}>

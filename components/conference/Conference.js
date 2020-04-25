@@ -1,15 +1,15 @@
 import Link from 'next/link';
-import ReviewCount from './ReviewCount';
-import SubmissionCount from './SubmissionCount';
 
 const Conference = (props) => {
+    const reviewed = props.conf.submissions.data.filter(review => review != "SUBMITTED");
+
     return (
         <tr key={props.conf._id}>
             <td>
                 <Link href={`/conferences/${props.conf.short_name}`}><a>{props.conf.name}</a></Link>
             </td>
-            <td style={{textAlign: "center"}}><SubmissionCount conf={props.conf._id} /></td>
-            <td style={{textAlign: "center"}}><ReviewCount conf={props.conf._id} /></td>
+            <td style={{textAlign: "center"}}>{props.conf.submissions.data.length}</td>
+            <td style={{textAlign: "center"}}>{reviewed.length}</td>
         </tr>
     );
 }

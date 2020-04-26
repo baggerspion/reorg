@@ -75,7 +75,7 @@ def create_reviews():
                 new_review = {
                     "reviewer": reviewer,
                     "submission": submission,
-                    "score": random.randint(0, 6) + 1,
+                    "score": random.randint(0, 5),
                     "public": fake.paragraph(),
                     "private": fake.paragraph()
                 }

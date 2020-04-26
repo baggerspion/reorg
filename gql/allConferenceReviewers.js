@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 const allConferenceReviewers = (short_name) => {
     return (
         gql`query allConfReviewers {
-            conferenceByShortName(short_name: "${short_name}") {
+            findConferenceByID(id: "${short_name}") {
                 name
                 reviewers {
                     data {

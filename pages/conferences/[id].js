@@ -16,13 +16,13 @@ const Conference = (id) => {
 
     return (
         <Layout>
-            <h1>{data.conferenceByShortName.name}</h1>
+            <h1>{data.findConferenceByID.name}</h1>
             <hr />
             <h2>Submissions</h2>
-            <Submissions submissions={dataScore.conferenceByShortName.submissions.data} />
+            <Submissions submissions={dataScore.findConferenceByID.submissions.data} />
             <hr />
             <h2>Reviewers</h2>
-            <Reviewers committee={data.conferenceByShortName.reviewers.data} />
+            <Reviewers committee={data.findConferenceByID.reviewers.data} />
         </Layout>
     );
 }

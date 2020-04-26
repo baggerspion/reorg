@@ -1,4 +1,6 @@
-import Table from 'react-bootstrap/Table'
+import Link from 'next/link';
+import StatusSymbol from './StatusSymbol';
+import Table from 'react-bootstrap/Table';
 
 const mean = (arr) => {
     return Number.parseFloat(arr.reduce((a, b) => a + b, 0) / arr.length).toPrecision(2);
@@ -28,15 +30,17 @@ const Submissions = (props) => {
                     <th style={{textAlign: "center"}}>#</th>
                     <th style={{textAlign: "center"}}>μ</th>
                     <th style={{textAlign: "center"}}>σ</th>
+                    <th style={{textAlign: "center"}}>Status</th>
                 </tr>
             </thead>
             <tbody>
                 {props.submissions.map((submission) => (
                     <tr>
-                        <td>{submission.title}</td>
+                        <td><Link href={`/submissions/${submission._id}`}><a>{submission.title}</a></Link></td>
                         <td style={{textAlign: "center"}}>{submission.reviews.data.length}</td>
                         <td style={{textAlign: "center"}}>{mean(submission.reviews.data.map(score => score['score']))}</td>
                         <td style={{textAlign: "center"}}>{standardDeviation(submission.reviews.data.map(score => score['score']))}</td>
+                        <td style={{textAlign: "center"}}><StatusSymbol status={submission.status} /></td>
                     </tr>
                 ))}
             </tbody>

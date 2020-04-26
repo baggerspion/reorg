@@ -3,10 +3,12 @@ import gql from 'graphql-tag';
 const allConferenceSubmissionScores = (short_name) => {
     return (
         gql`query FindAllSubmissionScores {
-            conferenceByShortName(short_name: "${short_name}") {
+            findConferenceByID(id: "${short_name}") {
                 submissions {
                     data {
+                        _id
                         title
+                        status
                         reviews {
                             data {
                                 score

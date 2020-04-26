@@ -6,7 +6,7 @@ const Conference = (props) => {
     return (
         <tr key={props.conf._id}>
             <td>
-                <Link href={`/conferences/${props.conf.short_name}`}><a>{props.conf.name}</a></Link>
+                <Link href={`/conferences/${props.conf._id}`}><a>{props.conf.name}</a></Link>
             </td>
             <td style={{textAlign: "center"}}>{props.conf.submissions.data.length}</td>
             <td style={{textAlign: "center"}}>{reviewed.length}</td>

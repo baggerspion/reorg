@@ -4,6 +4,7 @@ const submissionDetails = (id) => {
     return (
         gql`query submissionDetails{
             findSubmissionByID(id: "${id}") {
+                abstract
                 authors {
                     data {
                         first_name
@@ -11,22 +12,23 @@ const submissionDetails = (id) => {
                         email
                     }
                 }
+                status
                 title
-                    reviews {
-                        data {
-                            score
-                            public
-                            private
+                reviews {
+                    data {
+                        score
+                        public
+                        private
+                        reviewer {
                             reviewer {
-                                reviewer {
-                                    first_name
-                                    last_name
-                                }
+                                first_name
+                                last_name
                             }
                         }
                     }
                 }
-          }`
+            }
+        }`
     );
 }
 

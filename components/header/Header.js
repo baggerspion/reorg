@@ -1,4 +1,5 @@
 import HeaderLink from './HeaderLink';
+import Login from '../../components/login/Login';
 
 function Header() {
     return (
@@ -20,7 +21,7 @@ function Header() {
                 <ul className="navbar-nav ml-auto">
                     <HeaderLink name="About" href="/about" />
                     <HeaderLink name="User" href="/user" />
-                    <HeaderLink name="Logout" href="/logout" />
+                    <Login />
                 </ul>
             </div>
         </nav>

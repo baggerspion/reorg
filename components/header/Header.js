@@ -1,7 +1,7 @@
 import HeaderLink from './HeaderLink';
 import Login from '../../components/login/Login';
 
-function Header() {
+const Header = () => {
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-4">
             <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">

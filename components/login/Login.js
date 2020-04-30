@@ -31,10 +31,7 @@ const popover = (
     </Popover>
   );
 
-const Login = (props) => {
-    const [show, setShow] = useState(false);
-    const toggle = () => setPopoverOpen(!popoverOpen);
-    
+const Login = () => {
     return (
         <li className="nav-item">
             <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>

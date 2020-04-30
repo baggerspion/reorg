@@ -3,8 +3,6 @@ import Login from '../../components/login/Login';
 import { useState } from 'react';
 
 const Header = () => {
-    const [login, showLogin] = useState(true);
-
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-primary mb-4">
             <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
